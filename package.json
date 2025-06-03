@@ -14,7 +14,7 @@
     "db:studio": "pnpm -F db db:studio",
     "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
     "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
-    "postinstall": "pnpm -F db generate",
+    "postinstall": "pnpm db:generate",
     "lint": "next lint",
     "lint:fix": "next lint --fix",
     "preview": "pnpm build && pnpm start",
