@@ -1,9 +1,12 @@
-import type { DefaultSession, NextAuthConfig } from 'next-auth'
+import type { DefaultSession, NextAuthConfig, User } from 'next-auth'
+import type { JWT } from 'next-auth/jwt'
+import { randomUUID } from 'node:crypto'
+
 import { PrismaAdapter } from '@auth/prisma-adapter'
 import DiscordProvider from 'next-auth/providers/discord'
 import GithubProvider from 'next-auth/providers/github'
-
 import { db } from '../db'
+import CredentialsProvider from './credentials'
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -20,11 +23,14 @@ declare module 'next-auth' {
     } & DefaultSession['user']
   }
 
-  // interface User {
-  //   // ...other properties
-  //   // role: UserRole;
-  // }
+  interface User {
+    // ...other properties
+    // role: UserRole;
+    sessionToken?: string
+  }
 }
+
+export const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -33,6 +39,7 @@ declare module 'next-auth' {
  */
 export const authConfig = {
   providers: [
+    CredentialsProvider,
     DiscordProvider,
     GithubProvider,
     /**
@@ -47,12 +54,37 @@ export const authConfig = {
   ],
   adapter: PrismaAdapter(db),
   callbacks: {
-    session: ({ session, user }) => ({
-      ...session,
-      user: {
-        ...session.user,
-        id: user.id,
-      },
-    }),
+    session({ session, token }) {
+      if (token) {
+        session.user.id = token.id as string
+      }
+      return session
+    },
+    jwt({ token, user }) {
+      if (user) {
+        token.id = token.sub
+        token.sessionToken = user.sessionToken
+      }
+      return token
+    },
+  },
+  session: {
+    strategy: 'jwt',
+  },
+  events: {
+    async signIn(message) {
+      const { user } = message
+      const sessionToken = randomUUID()
+      user.sessionToken = sessionToken
+      await db.session.create({
+        data: { userId: user.id!, expires, sessionToken },
+      })
+    },
+    async signOut(message) {
+      const { token } = message as { token: JWT & User }
+      if (token?.sessionToken) {
+        await db.session.delete({ where: { sessionToken: token.sessionToken } })
+      }
+    },
   },
 } satisfies NextAuthConfig

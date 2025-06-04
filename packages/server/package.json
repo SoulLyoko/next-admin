@@ -7,8 +7,12 @@
     "@prisma/client": "catalog:",
     "@trpc/server": "catalog:",
     "next-auth": "catalog:",
+    "react": "catalog:",
     "server-only": "catalog:",
     "superjson": "catalog:",
     "zod": "catalog:"
+  },
+  "devDependencies": {
+    "@types/react": "catalog:"
   }
 }

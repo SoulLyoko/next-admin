@@ -68,6 +68,7 @@ export default async function Home() {
               >
                 {session ? 'Sign out' : 'Sign in'}
               </Link>
+              {!session && <Link href="/signup">Sign up</Link>}
             </div>
           </div>
 
