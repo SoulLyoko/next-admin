@@ -1,47 +1,46 @@
 {
   "name": "t3-admin",
+  "type": "module",
   "version": "0.1.0",
   "private": true,
-  "type": "module",
+  "packageManager": "pnpm@9.15.9",
   "scripts": {
     "build": "pnpm db:deploy && pnpm -F web build",
     "start": "pnpm -F web start",
-    "dev": "pnpm db:migrate && pnpm -F web dev",
-    "check": "next lint && tsc --noEmit",
+    "dev": "pnpm db:dev && pnpm -F web dev",
     "db:generate": "pnpm -F db db:generate",
-    "db:migrate": "pnpm -F db db:migrate",
+    "db:dev": "pnpm -F db db:dev",
     "db:deploy": "pnpm -F db db:deploy",
+    "db:reset": "pnpm -F db db:reset",
     "db:studio": "pnpm -F db db:studio",
-    "format:check": "prettier --check \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
-    "format:write": "prettier --write \"**/*.{ts,tsx,js,jsx,mdx}\" --cache",
-    "postinstall": "pnpm db:generate",
-    "lint": "next lint",
-    "lint:fix": "next lint --fix",
+    "postinstall": "npx simple-git-hooks && pnpm db:generate",
+    "lint": "eslint .",
     "preview": "pnpm build && pnpm start",
-    "typecheck": "tsc --noEmit"
-  },
-  "dependencies": {
-    "superjson": "^2.2.1",
-    "zod": "^3.24.2"
+    "typecheck": "tsc --noEmit",
+    "upd": "taze major -r -l -I"
   },
   "devDependencies": {
-    "@eslint/eslintrc": "^3.3.1",
-    "@tailwindcss/postcss": "^4.0.15",
-    "@types/node": "^20.14.10",
-    "@types/react": "^19.0.0",
-    "@types/react-dom": "^19.0.0",
-    "eslint": "^9.23.0",
-    "eslint-config-next": "^15.2.3",
-    "next": "^15.2.3",
-    "postcss": "^8.5.3",
-    "prettier": "^3.5.3",
-    "prettier-plugin-tailwindcss": "^0.6.11",
-    "tailwindcss": "^4.0.15",
-    "typescript": "^5.8.2",
-    "typescript-eslint": "^8.27.0"
+    "@antfu/eslint-config": "catalog:",
+    "@commitlint/cli": "catalog:",
+    "@commitlint/config-conventional": "catalog:",
+    "@types/node": "catalog:",
+    "@unocss/eslint-plugin": "catalog:",
+    "eslint": "catalog:",
+    "eslint-plugin-format": "catalog:",
+    "lint-staged": "catalog:",
+    "next": "catalog:",
+    "simple-git-hooks": "catalog:",
+    "taze": "catalog:",
+    "typescript": "catalog:"
   },
-  "ct3aMetadata": {
-    "initVersion": "7.39.3"
+  "simple-git-hooks": {
+    "commit-msg": "npx --no-install commitlint --edit $1",
+    "pre-commit": "pnpm lint-staged"
   },
-  "packageManager": "pnpm@10.3.0"
+  "commitlint": {
+    "extends": "@commitlint/config-conventional"
+  },
+  "lint-staged": {
+    "*": "eslint --fix"
+  }
 }

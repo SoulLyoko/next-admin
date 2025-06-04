@@ -3,10 +3,12 @@
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
-    "@auth/prisma-adapter": "^2.7.2",
-    "@prisma/client": "^6.5.0",
-    "@trpc/server": "^11.0.0",
-    "next-auth": "5.0.0-beta.25",
-    "server-only": "^0.0.1"
+    "@auth/prisma-adapter": "catalog:",
+    "@prisma/client": "catalog:",
+    "@trpc/server": "catalog:",
+    "next-auth": "catalog:",
+    "server-only": "catalog:",
+    "superjson": "catalog:",
+    "zod": "catalog:"
   }
 }

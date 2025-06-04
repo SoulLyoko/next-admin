@@ -1,3 +1,3 @@
-import { handlers } from "@app/server";
+import { handlers } from '@app/server'
 
-export const { GET, POST } = handlers;
+export const { GET, POST } = handlers
