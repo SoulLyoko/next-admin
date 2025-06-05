@@ -1,5 +1,4 @@
 import { z } from 'zod'
-
 import {
   createTRPCRouter,
   publicProcedure,
@@ -10,9 +9,8 @@ export const userRouter = createTRPCRouter({
     .input(z.object({ name: z.string().min(1), password: z.string().min(1) }))
     .mutation(async ({ ctx, input }) => {
       const existsUser = await ctx.db.user.findFirst({ where: { name: input.name } })
-      if (existsUser) {
-        throw new Error('User already exists')
-      }
+      if (existsUser)
+        throw new Error('User name already exists.')
 
       const data = {
         name: input.name,
