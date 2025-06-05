@@ -1,25 +1,23 @@
 import { signIn } from '@app/server'
 import { redirect } from 'next/navigation'
-import { ZodError } from 'zod'
 import { api, HydrateClient } from '~/trpc/server'
 
 export default async function SignUp(props: { searchParams: Promise<{ error: string }> }) {
   const { error } = await props.searchParams
 
-  async function onSubmit(e: FormData) {
+  async function onSubmit(formData: FormData) {
     'use server'
-    const name = e.get('name') as string
-    const password = e.get('password') as string
 
-    const data = { name, password }
     try {
-      await api.user.signup(data)
-      await signIn('credentials', data)
+      await api.user.signup(formData)
     }
     catch (error: any) {
-      const msg = error.cause instanceof ZodError ? 'Invalid credentials.' : error.message
-      redirect(`/signup?error=${msg}`)
+      // const msg = error.cause instanceof ZodError ? 'Invalid input.' : error.message
+      redirect(`/signup?error=${error.message}`)
     }
+
+    formData.set('redirectTo', '/')
+    await signIn('credentials', formData)
   }
 
   return (
