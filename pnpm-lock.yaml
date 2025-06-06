@@ -231,9 +231,6 @@ importers:
       '@app/server':
         specifier: workspace:*
         version: link:../server
-      '@prisma/client':
-        specifier: 'catalog:'
-        version: 6.9.0(prisma@6.9.0(typescript@5.8.3))(typescript@5.8.3)
       '@t3-oss/env-nextjs':
         specifier: 'catalog:'
         version: 0.13.6(typescript@5.8.3)(zod@3.25.50)
@@ -277,6 +274,9 @@ importers:
       '@iconify-json/ant-design':
         specifier: 'catalog:'
         version: 1.2.5
+      '@prisma/client':
+        specifier: 'catalog:'
+        version: 6.9.0(prisma@6.9.0(typescript@5.8.3))(typescript@5.8.3)
       '@trpc/server':
         specifier: 'catalog:'
         version: 11.2.0(typescript@5.8.3)
