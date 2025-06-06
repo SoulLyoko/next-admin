@@ -1,13 +1,12 @@
 'use client'
 import type { ThemeConfig } from 'antd'
-import type { RouterOutputs } from '~/trpc/react'
 import { ConfigProvider, Layout } from 'antd'
 import LayoutContent from './content'
 import LayoutFooter from './footer'
 import LayoutHeader from './header'
 import LayoutSider from './sider'
 
-export default function DefaultLayout({ children, user }: { children: React.ReactNode, user: RouterOutputs['user']['getUserInfo'] }) {
+export default function DefaultLayout({ children }: { children: React.ReactNode }) {
   const theme: ThemeConfig = {
     components: {
       Layout: {
@@ -26,7 +25,7 @@ export default function DefaultLayout({ children, user }: { children: React.Reac
       <Layout className="h-full" hasSider>
         <LayoutSider />
         <Layout>
-          <LayoutHeader user={user} />
+          <LayoutHeader />
           <LayoutContent>
             {children}
           </LayoutContent>

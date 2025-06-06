@@ -8,7 +8,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/api/auth/signin')
 
   return (
-    <Layout user={session.user}>
+    <Layout>
       {children}
     </Layout>
   )

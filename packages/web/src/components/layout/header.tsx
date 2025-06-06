@@ -1,9 +1,11 @@
 'use client'
 import type { MenuProps } from 'antd'
-import type { RouterOutputs } from '~/trpc/react'
 import { Button, Dropdown, Layout } from 'antd'
+import { api } from '~/trpc/react'
 
-export default function LayoutHeader({ user }: { user: RouterOutputs['user']['getUserInfo'] }) {
+export default function LayoutHeader() {
+  const { data: user } = api.user.getInfo.useQuery()
+
   const dropdownItems: MenuProps['items'] = [
     {
       key: '1',

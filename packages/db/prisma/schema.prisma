@@ -6,7 +6,11 @@ generator client {
 }
 
 generator zod {
-    provider = "zod-prisma"
+    provider                         = "zod-prisma-types"
+    output                           = "./zod"
+    useMultipleFiles                 = true
+    createInputTypes                 = false
+    createPartialTypes               = true
 }
 
 datasource db {
@@ -64,7 +68,7 @@ model User {
     email         String?   @unique
     emailVerified DateTime?
     image         String?
-    password         String?
+    password      String?
     accounts      Account[]
     sessions      Session[]
     posts         Post[]

@@ -1,14 +1,10 @@
-import { UserModel } from '@app/db/zod/user'
+import type { UserPartial } from '@app/db/zod'
+import { UserPartialSchema, UserSchema } from '@app/db/zod'
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
-import { R } from '../utils'
+import { PageSchema, R } from '../utils'
 
-const pageSchema = z.object({
-  pageSize: z.number().min(1).max(100).optional(),
-  current: z.number().min(1).optional(),
-})
-const querySchema = UserModel.partial()
-const userWhere = (input?: z.input<typeof querySchema>) => ({ ...input, name: { contains: input?.name ?? '' } })
+const userWhere = (input?: UserPartial) => ({ ...input, name: { contains: input?.name ?? '' } })
 
 export const userRouter = createTRPCRouter({
   signup: publicProcedure
@@ -30,38 +26,39 @@ export const userRouter = createTRPCRouter({
       return ctx.db.user.create({ data })
     }),
 
-  getUserInfo: protectedProcedure.query(async ({ ctx }) => {
-    return ctx.session.user
-  }),
+  getInfo: protectedProcedure
+    .query(async ({ ctx }) => {
+      return ctx.session.user
+    }),
 
   page: protectedProcedure
-    .input(pageSchema.and(querySchema))
+    .input(PageSchema.and(UserPartialSchema))
     .query(async ({ ctx, input }) => {
       const res = await ctx.db.user.pagination<'user'>(userWhere(input))
       return R.success(res)
     }),
 
-  list: protectedProcedure.input(querySchema).query(async ({ ctx, input }) => {
+  list: protectedProcedure.input(UserPartialSchema).query(async ({ ctx, input }) => {
     const data = await ctx.db.user.findMany({ where: userWhere(input) })
     return R.success({ data })
   }),
 
   create: protectedProcedure
-    .input(UserModel.omit({ id: true }).partial())
+    .input(UserPartialSchema)
     .mutation(async ({ ctx, input }) => {
       const data = await ctx.db.user.create({ data: input })
       return R.success({ data })
     }),
 
   update: protectedProcedure
-    .input(UserModel)
+    .input(UserSchema)
     .mutation(async ({ ctx, input }) => {
       const data = await ctx.db.user.update({ where: { id: input.id }, data: input })
       return R.success({ data })
     }),
 
   delete: protectedProcedure
-    .input(UserModel.pick({ id: true }))
+    .input(UserSchema.pick({ id: true }))
     .mutation(async ({ ctx, input }) => {
       const data = await ctx.db.user.delete({ where: { id: input.id } })
       return R.success({ data })
