@@ -6,6 +6,18 @@ settings:
 
 catalogs:
   default:
+    '@ant-design/icons':
+      specifier: ^6.0.0
+      version: 6.0.0
+    '@ant-design/nextjs-registry':
+      specifier: ^1.0.2
+      version: 1.0.2
+    '@ant-design/pro-components':
+      specifier: ^2.8.7
+      version: 2.8.7
+    '@ant-design/v5-patch-for-react-19':
+      specifier: ^1.0.3
+      version: 1.0.3
     '@antfu/eslint-config':
       specifier: ^4.13.2
       version: 4.13.2
@@ -18,6 +30,9 @@ catalogs:
     '@commitlint/config-conventional':
       specifier: ^19.8.1
       version: 19.8.1
+    '@iconify-json/ant-design':
+      specifier: ^1.2.5
+      version: 1.2.5
     '@prisma/client':
       specifier: ^6.9.0
       version: 6.9.0
@@ -54,6 +69,9 @@ catalogs:
     '@unocss/reset':
       specifier: ^66.1.3
       version: 66.1.3
+    antd:
+      specifier: ^5.25.4
+      version: 5.25.4
     eslint:
       specifier: ^9.28.0
       version: 9.28.0
@@ -102,6 +120,9 @@ catalogs:
     zod:
       specifier: ^3.25.50
       version: 3.25.50
+    zod-prisma:
+      specifier: ^0.5.4
+      version: 0.5.4
 
 importers:
 
@@ -156,7 +177,7 @@ importers:
         specifier: 'catalog:'
         version: 3.25.50
       zod-prisma:
-        specifier: ^0.5.4
+        specifier: 'catalog:'
         version: 0.5.4(prisma@6.9.0(typescript@5.8.3))(zod@3.25.50)
 
   packages/server:
@@ -196,16 +217,16 @@ importers:
   packages/web:
     dependencies:
       '@ant-design/icons':
-        specifier: ^6.0.0
+        specifier: 'catalog:'
         version: 6.0.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@ant-design/nextjs-registry':
-        specifier: ^1.0.2
+        specifier: 'catalog:'
         version: 1.0.2(@ant-design/cssinjs@1.23.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(antd@5.25.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(next@15.3.3(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@ant-design/pro-components':
-        specifier: ^2.8.7
+        specifier: 'catalog:'
         version: 2.8.7(antd@5.25.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(rc-field-form@2.7.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@ant-design/v5-patch-for-react-19':
-        specifier: ^1.0.3
+        specifier: 'catalog:'
         version: 1.0.3(antd@5.25.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0))(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       '@app/server':
         specifier: workspace:*
@@ -229,7 +250,7 @@ importers:
         specifier: 'catalog:'
         version: 66.1.3
       antd:
-        specifier: ^5.25.4
+        specifier: 'catalog:'
         version: 5.25.4(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
       next:
         specifier: 'catalog:'
@@ -251,7 +272,7 @@ importers:
         version: 3.25.50
     devDependencies:
       '@iconify-json/ant-design':
-        specifier: ^1.2.5
+        specifier: 'catalog:'
         version: 1.2.5
       '@trpc/server':
         specifier: 'catalog:'
