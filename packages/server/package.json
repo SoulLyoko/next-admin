@@ -3,6 +3,7 @@
   "type": "module",
   "main": "src/index.ts",
   "dependencies": {
+    "@app/db": "workspace:*",
     "@auth/prisma-adapter": "catalog:",
     "@prisma/client": "catalog:",
     "@trpc/server": "catalog:",

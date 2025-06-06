@@ -1,6 +1,11 @@
+import type { Metadata } from 'next'
 import { signIn } from '@app/server'
 import { redirect } from 'next/navigation'
 import { api, HydrateClient } from '~/trpc/server'
+
+export const metadata: Metadata = {
+  title: 'Sign Up',
+}
 
 export default async function SignUp(props: { searchParams: Promise<{ error: string }> }) {
   const { error } = await props.searchParams

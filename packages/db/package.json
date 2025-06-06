@@ -1,6 +1,9 @@
 {
   "name": "@app/db",
   "type": "module",
+  "exports": {
+    "./zod/*": "./prisma/zod/*.ts"
+  },
   "scripts": {
     "db:generate": "prisma generate",
     "db:dev": "prisma migrate dev",
@@ -10,6 +13,8 @@
   },
   "dependencies": {
     "@prisma/client": "catalog:",
-    "prisma": "catalog:"
+    "prisma": "catalog:",
+    "zod": "catalog:",
+    "zod-prisma": "catalog:"
   }
 }

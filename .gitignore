@@ -12,6 +12,7 @@ coverage
 prisma/db.sqlite
 prisma/db.sqlite-journal
 db.sqlite
+**/prisma/zod
 
 # next.js
 .next/

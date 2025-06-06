@@ -1,1 +1,6 @@
 @unocss all;
+
+html,
+body {
+  height: 100%;
+}

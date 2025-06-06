@@ -7,6 +7,10 @@
     "start": "next start"
   },
   "dependencies": {
+    "@ant-design/icons": "catalog:",
+    "@ant-design/nextjs-registry": "catalog:",
+    "@ant-design/pro-components": "catalog:",
+    "@ant-design/v5-patch-for-react-19": "catalog:",
     "@app/server": "workspace:*",
     "@t3-oss/env-nextjs": "catalog:",
     "@tanstack/react-query": "catalog:",
@@ -14,6 +18,7 @@
     "@trpc/react-query": "catalog:",
     "@unocss/postcss": "catalog:",
     "@unocss/reset": "catalog:",
+    "antd": "catalog:",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -22,6 +27,7 @@
     "zod": "catalog:"
   },
   "devDependencies": {
+    "@iconify-json/ant-design": "catalog:",
     "@trpc/server": "catalog:",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
