@@ -6,11 +6,11 @@ generator client {
 }
 
 generator zod {
-    provider                         = "zod-prisma-types"
-    output                           = "./zod"
-    useMultipleFiles                 = true
-    createInputTypes                 = false
-    createPartialTypes               = true
+    provider                  = "zod-prisma-types"
+    output                    = "./zod"
+    useMultipleFiles          = true
+    createInputTypes          = false
+    createPartialTypes        = true
 }
 
 datasource db {
@@ -20,18 +20,6 @@ datasource db {
     // https://next-auth.js.org/adapters/prisma#create-the-prisma-schema
     // https://www.prisma.io/docs/reference/api-reference/prisma-schema-reference#string
     url      = env("DATABASE_URL")
-}
-
-model Post {
-    id        Int      @id @default(autoincrement())
-    name      String
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-
-    createdBy   User   @relation(fields: [createdById], references: [id])
-    createdById String
-
-    @@index([name])
 }
 
 // Necessary for Next auth
@@ -62,22 +50,90 @@ model Session {
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
 
-model User {
-    id            String    @id @default(cuid())
-    name          String?
-    email         String?   @unique
-    emailVerified DateTime?
-    image         String?
-    password      String?
-    accounts      Account[]
-    sessions      Session[]
-    posts         Post[]
-}
-
 model VerificationToken {
     identifier String
     token      String   @unique
     expires    DateTime
 
     @@unique([identifier, token])
+}
+
+model User {
+    id        String         @id @default(cuid())
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+    createdBy String?
+    updatedBy String?
+    name      String?
+    email     String?
+    password  String?
+    accounts  Account[]
+    sessions  Session[]
+    posts     PostsOnUsers[]
+    roles     RolesOnUsers[]
+    depts     DeptsOnUsers[]
+}
+
+model Post {
+    id        String         @id @default(cuid())
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+    createdBy String?
+    updatedBy String?
+    name      String?
+    users     PostsOnUsers[]
+
+    @@index([name])
+}
+
+model PostsOnUsers {
+    post   Post   @relation(fields: [postId], references: [id])
+    postId String // relation scalar field (used in the `@relation` attribute above)
+    user   User   @relation(fields: [userId], references: [id])
+    userId String // relation scalar field (used in the `@relation` attribute above)
+
+    @@id([postId, userId])
+}
+
+model Role {
+    id        String         @id @default(cuid())
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+    createdBy String?
+    updatedBy String?
+    name      String?
+    users     RolesOnUsers[]
+
+    @@index([name])
+}
+
+model RolesOnUsers {
+    role   Role   @relation(fields: [roleId], references: [id])
+    roleId String // relation scalar field (used in the `@relation` attribute above)
+    user   User   @relation(fields: [userId], references: [id])
+    userId String // relation scalar field (used in the `@relation` attribute above)
+
+    @@id([roleId, userId])
+}
+
+model Dept {
+    id        String         @id @default(cuid())
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+    createdBy String?
+    updatedBy String?
+    name      String?
+    parentId  String?
+    parent    Dept?          @relation("DeptTree", fields: [parentId], references: [id])
+    children  Dept[]         @relation("DeptTree")
+    users     DeptsOnUsers[]
+}
+
+model DeptsOnUsers {
+    dept   Dept   @relation(fields: [deptId], references: [id])
+    deptId String // relation scalar field (used in the `@relation` attribute above)
+    user   User   @relation(fields: [userId], references: [id])
+    userId String // relation scalar field (used in the `@relation` attribute above)
+
+    @@id([deptId, userId])
 }

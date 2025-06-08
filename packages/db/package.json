@@ -8,7 +8,9 @@
     "db:generate": "prisma generate",
     "db:dev": "prisma migrate dev",
     "db:deploy": "prisma migrate deploy",
+    "db:push": "prisma db push",
     "db:reset": "prisma migrate reset",
+    "db:seed": "prisma db seed",
     "db:studio": "prisma studio"
   },
   "dependencies": {
@@ -16,5 +18,8 @@
     "prisma": "catalog:",
     "zod": "catalog:",
     "zod-prisma-types": "catalog:"
+  },
+  "prisma": {
+    "seed": "node ./prisma/seed.js"
   }
 }

@@ -19,6 +19,7 @@
     "@unocss/postcss": "catalog:",
     "@unocss/reset": "catalog:",
     "antd": "catalog:",
+    "lodash-es": "^4.17.21",
     "next": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
@@ -30,6 +31,7 @@
     "@iconify-json/ant-design": "catalog:",
     "@prisma/client": "catalog:",
     "@trpc/server": "catalog:",
+    "@types/lodash-es": "^4.17.12",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "postcss": "catalog:"

@@ -2,7 +2,7 @@ import type { UserPartial } from '@app/db/zod'
 import { UserPartialSchema, UserSchema } from '@app/db/zod'
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
-import { PageSchema, R } from '../utils'
+import { PageSchema, parsePage, R } from '../utils'
 
 const userWhere = (input?: UserPartial) => ({ ...input, name: { contains: input?.name ?? '' } })
 
@@ -32,35 +32,86 @@ export const userRouter = createTRPCRouter({
     }),
 
   page: protectedProcedure
-    .input(PageSchema.and(UserPartialSchema))
+    .input(UserPartialSchema.merge(PageSchema))
     .query(async ({ ctx, input }) => {
-      const res = await ctx.db.user.pagination<'user'>(userWhere(input))
-      return R.success(res)
+      // const res = await ctx.db.user.pagination<'user'>({
+      //   include: {
+      //     posts: { include: { post: true } },
+      //     roles: { include: { role: true } },
+      //     depts: { include: { dept: true } },
+      //   },
+      //   where: userWhere(input),
+      // })
+      // return R.success(res)
+      const { where, ...page } = parsePage(input)
+      const data = await ctx.db.user.findMany({
+        ...page,
+        where: userWhere(where),
+        include: {
+          depts: { include: { dept: true } },
+          posts: { include: { post: true } },
+          roles: { include: { role: true } },
+        },
+      })
+      const total = await ctx.db.user.count({ where: userWhere(where) })
+      return R.success({
+        data: data.map(d => ({
+          ...d,
+          deptIds: d.depts.map(e => e.deptId),
+          postIds: d.posts.map(e => e.postId),
+          roleIds: d.roles.map(e => e.roleId),
+        })),
+        total,
+      })
     }),
 
   list: protectedProcedure.input(UserPartialSchema).query(async ({ ctx, input }) => {
     const data = await ctx.db.user.findMany({ where: userWhere(input) })
-    return R.success({ data })
+    return data
   }),
 
   create: protectedProcedure
     .input(UserPartialSchema)
     .mutation(async ({ ctx, input }) => {
       const data = await ctx.db.user.create({ data: input })
-      return R.success({ data })
+      return data
     }),
 
   update: protectedProcedure
-    .input(UserSchema)
+    .input(UserSchema.merge(z.object({
+      deptIds: z.string().array(),
+      postIds: z.string().array(),
+      roleIds: z.string().array(),
+    }).partial()))
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.user.update({ where: { id: input.id }, data: input })
-      return R.success({ data })
+      const { id, deptIds, postIds, roleIds, ...updateData } = input
+      const data = await ctx.db.user.update({
+        where: { id },
+        data: {
+          ...updateData,
+          depts: {
+            deleteMany: { userId: id },
+            createMany: { data: deptIds?.map(deptId => ({ deptId })) ?? [] },
+          },
+          posts: {
+            deleteMany: { userId: id },
+            createMany: { data: postIds?.map(postId => ({ postId })) ?? [] },
+          },
+          roles: {
+            deleteMany: { userId: id },
+            createMany: { data: roleIds?.map(roleId => ({ roleId })) ?? [] },
+          },
+        },
+      })
+      return data
     }),
 
   delete: protectedProcedure
-    .input(UserSchema.pick({ id: true }))
+    .input(z.string().or(z.string().array()))
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.user.delete({ where: { id: input.id } })
-      return R.success({ data })
+      const data = await ctx.db.user.deleteMany({
+        where: { id: { in: Array.isArray(input) ? input : [input] } },
+      })
+      return data
     }),
 })

@@ -1,39 +1,39 @@
-import { PostPartialSchema, PostSchema } from '@app/db/zod'
+import { RolePartialSchema, RoleSchema } from '@app/db/zod'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { PageSchema, R } from '../utils'
 
-export const postRouter = createTRPCRouter({
+export const roleRouter = createTRPCRouter({
   page: protectedProcedure
-    .input(PageSchema.and(PostPartialSchema))
+    .input(PageSchema.and(RolePartialSchema))
     .query(async ({ ctx, input }) => {
-      const res = await ctx.db.post.pagination<'post'>({ where: input })
+      const res = await ctx.db.role.pagination<'role'>({ where: input })
       return R.success(res)
     }),
 
-  list: protectedProcedure.input(PostPartialSchema).query(async ({ ctx, input }) => {
-    const data = await ctx.db.post.findMany({ where: input })
+  list: protectedProcedure.input(RolePartialSchema).query(async ({ ctx, input }) => {
+    const data = await ctx.db.role.findMany({ where: input })
     return data
   }),
 
   create: protectedProcedure
-    .input(PostPartialSchema)
+    .input(RolePartialSchema)
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.post.create({ data: input })
+      const data = await ctx.db.role.create({ data: input })
       return data
     }),
 
   update: protectedProcedure
-    .input(PostSchema)
+    .input(RoleSchema)
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.post.update({ where: { id: input.id }, data: input })
+      const data = await ctx.db.role.update({ where: { id: input.id }, data: input })
       return data
     }),
 
   delete: protectedProcedure
     .input(z.string().or(z.string().array()))
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.post.deleteMany({
+      const data = await ctx.db.dept.deleteMany({
         where: { id: { in: Array.isArray(input) ? input : [input] } },
       })
       return data
