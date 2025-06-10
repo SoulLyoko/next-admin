@@ -18,6 +18,7 @@ db.sqlite
 .next/
 out/
 next-env.d.ts
+auto-imports.d.ts
 
 # production
 /build

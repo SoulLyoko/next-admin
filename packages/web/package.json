@@ -3,7 +3,7 @@
   "type": "module",
   "scripts": {
     "build": "next build",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "start": "next start"
   },
   "dependencies": {
@@ -12,6 +12,7 @@
     "@ant-design/pro-components": "catalog:",
     "@ant-design/v5-patch-for-react-19": "catalog:",
     "@app/server": "workspace:*",
+    "@iconify/react": "^6.0.0",
     "@t3-oss/env-nextjs": "catalog:",
     "@tanstack/react-query": "catalog:",
     "@trpc/client": "catalog:",
@@ -34,6 +35,8 @@
     "@types/lodash-es": "^4.17.12",
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
-    "postcss": "catalog:"
+    "fast-glob": "^3.3.3",
+    "postcss": "catalog:",
+    "unplugin-auto-import": "^19.3.0"
   }
 }
