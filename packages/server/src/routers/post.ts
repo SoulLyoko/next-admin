@@ -1,4 +1,4 @@
-import { PostPartialSchema, PostSchema } from '@app/db/zod'
+import { PostPartialSchema } from '@app/db/zod'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { PageSchema, R } from '../utils'
@@ -24,7 +24,7 @@ export const postRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(PostSchema)
+    .input(PostPartialSchema)
     .mutation(async ({ ctx, input }) => {
       const data = await ctx.db.post.update({ where: { id: input.id }, data: input })
       return data
@@ -33,9 +33,9 @@ export const postRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.string().or(z.string().array()))
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.post.deleteMany({
-        where: { id: { in: Array.isArray(input) ? input : [input] } },
-      })
+      const inIds = { in: Array.isArray(input) ? input : [input] }
+      await ctx.db.postsOnUsers.deleteMany({ where: { postId: inIds } })
+      const data = await ctx.db.post.deleteMany({ where: { id: inIds } })
       return data
     }),
 })

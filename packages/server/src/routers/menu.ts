@@ -1,9 +1,9 @@
 import type { Prisma } from '@prisma/client'
-import { DeptPartialSchema } from '@app/db/zod'
+import { MenuPartialSchema } from '@app/db/zod'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 
-let treeInclude: Prisma.DeptInclude = {}
+let treeInclude: Prisma.MenuInclude = {}
 for (let i = 0; i < 9; i++) {
   if (i === 0) {
     treeInclude = { parent: true, children: true }
@@ -13,12 +13,12 @@ for (let i = 0; i < 9; i++) {
   }
 }
 
-export const deptRouter = createTRPCRouter({
+export const menuRouter = createTRPCRouter({
   tree: protectedProcedure
-    .input(DeptPartialSchema)
+    .input(MenuPartialSchema)
     .query(async ({ ctx, input }) => {
       const { name } = input
-      const data = await ctx.db.dept.findMany({
+      const data = await ctx.db.menu.findMany({
         include: treeInclude,
         where: name ? { name } : { parentId: null },
       })
@@ -26,16 +26,16 @@ export const deptRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(DeptPartialSchema)
+    .input(MenuPartialSchema)
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.dept.create({ data: input })
+      const data = await ctx.db.menu.create({ data: input })
       return data
     }),
 
   update: protectedProcedure
-    .input(DeptPartialSchema)
+    .input(MenuPartialSchema)
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.dept.update({ where: { id: input.id }, data: input })
+      const data = await ctx.db.menu.update({ where: { id: input.id }, data: input })
       return data
     }),
 
@@ -43,8 +43,8 @@ export const deptRouter = createTRPCRouter({
     .input(z.string().or(z.string().array()))
     .mutation(async ({ ctx, input }) => {
       const inIds = { in: Array.isArray(input) ? input : [input] }
-      await ctx.db.deptsOnUsers.deleteMany({ where: { deptId: inIds } })
-      const data = await ctx.db.dept.deleteMany({ where: { id: inIds } })
+      await ctx.db.menusOnRoles.deleteMany({ where: { menuId: inIds } })
+      const data = await ctx.db.menu.deleteMany({ where: { id: inIds } })
       return data
     }),
 })

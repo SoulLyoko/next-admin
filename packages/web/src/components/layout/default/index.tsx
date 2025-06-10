@@ -1,12 +1,11 @@
 'use client'
 import type { ThemeConfig } from 'antd'
-import { ConfigProvider, Layout } from 'antd'
 import LayoutContent from './content'
 import LayoutFooter from './footer'
 import LayoutHeader from './header'
 import LayoutSider from './sider'
 
-export default function DefaultLayout({ children }: { children: React.ReactNode }) {
+export default function LayoutDefault({ children }: { children: React.ReactNode }) {
   const theme: ThemeConfig = {
     components: {
       Layout: {
@@ -21,17 +20,17 @@ export default function DefaultLayout({ children }: { children: React.ReactNode 
   }
 
   return (
-    <ConfigProvider theme={theme}>
-      <Layout className="h-full" hasSider>
+    <AConfigProvider theme={theme}>
+      <ALayout className="h-full" hasSider>
         <LayoutSider />
-        <Layout>
+        <ALayout>
           <LayoutHeader />
           <LayoutContent>
             {children}
           </LayoutContent>
           <LayoutFooter />
-        </Layout>
-      </Layout>
-    </ConfigProvider>
+        </ALayout>
+      </ALayout>
+    </AConfigProvider>
   )
 }

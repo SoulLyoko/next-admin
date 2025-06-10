@@ -1,7 +1,6 @@
 'use client'
 import type { ProColumns } from '@ant-design/pro-components'
 import type { RouterOutputs } from '~/trpc/react'
-import ProCrud from '~/components/pro-crud'
 
 import { api } from '~/trpc/react'
 

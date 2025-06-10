@@ -1,6 +1,5 @@
 import { auth } from '@app/server'
 import { redirect } from 'next/navigation'
-import Layout from '~/components/layout'
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth()
@@ -8,8 +7,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     redirect('/api/auth/signin')
 
   return (
-    <Layout>
+    <LayoutDefault>
       {children}
-    </Layout>
+    </LayoutDefault>
   )
 }

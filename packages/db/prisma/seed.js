@@ -3,6 +3,25 @@ import { PrismaClient } from '@prisma/client'
 
 const prisma = new PrismaClient()
 async function main() {
+  const deptId = 'cmbmflf5q00023p6ky4ubakr0'
+  await prisma.dept.upsert({
+    where: { id: deptId },
+    create: { id: deptId, name: 't0' },
+    update: {},
+  })
+  const deptId2 = 'cmbn97c0s00023p6pa52i82cw'
+  await prisma.dept.upsert({
+    where: { id: deptId2 },
+    create: { id: deptId2, name: 't1', parentId: deptId },
+    update: {},
+  })
+  const deptId3 = 'cmboex0qh00003j6q398113nf'
+  await prisma.dept.upsert({
+    where: { id: deptId3 },
+    create: { id: deptId3, name: 't2', parentId: deptId2 },
+    update: {},
+  })
+
   const postId = 'cmbmfixog00003p6k2alo7z2r'
   await prisma.post.upsert({
     where: { id: postId },
@@ -29,19 +48,6 @@ async function main() {
     update: {},
   })
 
-  const deptId = 'cmbmflf5q00023p6ky4ubakr0'
-  await prisma.dept.upsert({
-    where: { id: deptId },
-    create: { id: deptId, name: 't0' },
-    update: {},
-  })
-  const deptId2 = 'cmbn97c0s00023p6pa52i82cw'
-  await prisma.dept.upsert({
-    where: { id: deptId2 },
-    create: { id: deptId2, name: 't1', parentId: deptId },
-    update: {},
-  })
-
   const userId = 'cmbmfmu1e00033p6kskje2c2c'
   await prisma.user.upsert({
     where: { id: userId },
@@ -52,6 +58,35 @@ async function main() {
       posts: { create: { postId } },
       roles: { create: { roleId } },
       depts: { create: { deptId } },
+    },
+    update: {},
+  })
+
+  const menuIds = {
+    sys: 'cmbohn6xg00013j6qtdyo1pml',
+    sys_dept: 'cmbohnxux00033j6q6ubaq52k',
+    sys_post: 'cmboho4ko00043j6qatm1qtc4',
+    sys_role: 'cmbohoabw00053j6qafev69a1',
+    sys_user: 'cmbohnl4600023j6q7cgfd7be',
+    sys_menu: 'cmbohu27500063j6q2o6xfhgn',
+  }
+  await prisma.menu.upsert({
+    where: { id: menuIds.sys },
+    create: {
+      id: menuIds.sys,
+      name: '系统管理',
+      icon: 'ant-design:appstore-outlined',
+      children: {
+        createMany: {
+          data: [
+            { id: menuIds.sys_dept, name: '部门管理', path: '/sys/dept', icon: 'ant-design:cluster-outlined' },
+            { id: menuIds.sys_post, name: '岗位管理', path: '/sys/post', icon: 'ant-design:idcard-outlined' },
+            { id: menuIds.sys_role, name: '角色管理', path: '/sys/role', icon: 'ant-design:user-add-outlined' },
+            { id: menuIds.sys_user, name: '用户管理', path: '/sys/user', icon: 'ant-design:user-outlined' },
+            { id: menuIds.sys_menu, name: '菜单管理', path: '/sys/menu', icon: 'ant-design:appstore-add-outlined' },
+          ],
+        },
+      },
     },
     update: {},
   })

@@ -6,11 +6,11 @@ generator client {
 }
 
 generator zod {
-    provider                  = "zod-prisma-types"
-    output                    = "./zod"
-    useMultipleFiles          = true
-    createInputTypes          = false
-    createPartialTypes        = true
+    provider           = "zod-prisma-types"
+    output             = "./zod"
+    useMultipleFiles   = true
+    createInputTypes   = false
+    createPartialTypes = true
 }
 
 datasource db {
@@ -103,6 +103,7 @@ model Role {
     updatedBy String?
     name      String?
     users     RolesOnUsers[]
+    menus     MenusOnRoles[]
 
     @@index([name])
 }
@@ -136,4 +137,28 @@ model DeptsOnUsers {
     userId String // relation scalar field (used in the `@relation` attribute above)
 
     @@id([deptId, userId])
+}
+
+model Menu {
+    id        String         @id @default(cuid())
+    createdAt DateTime       @default(now())
+    updatedAt DateTime       @updatedAt
+    createdBy String?
+    updatedBy String?
+    icon      String?
+    name      String?
+    path      String?
+    parentId  String?
+    parent    Menu?          @relation("MenuTree", fields: [parentId], references: [id])
+    children  Menu[]         @relation("MenuTree")
+    roles     MenusOnRoles[]
+}
+
+model MenusOnRoles {
+    menu   Menu   @relation(fields: [menuId], references: [id])
+    menuId String // relation scalar field (used in the `@relation` attribute above)
+    role   Role   @relation(fields: [roleId], references: [id])
+    roleId String // relation scalar field (used in the `@relation` attribute above)
+
+    @@id([menuId, roleId])
 }

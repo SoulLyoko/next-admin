@@ -1,17 +1,16 @@
 'use client'
 import type { ProColumns } from '@ant-design/pro-components'
 import type { RouterOutputs } from '~/trpc/react'
-import ProCrud from '~/components/pro-crud'
 import { api } from '~/trpc/react'
 
-type DeptVO = RouterOutputs['dept']['treeList']['data'][number]
+type DeptVO = RouterOutputs['dept']['tree'][number]
 
 export default function Dept() {
   const createDept = api.dept.create.useMutation().mutateAsync
   const updateDept = api.dept.update.useMutation().mutateAsync
   const deleteDept = api.dept.delete.useMutation().mutateAsync
-  const getDeptTreeList = api.useUtils().dept.treeList.fetch
   const getDeptTree = api.useUtils().dept.tree.fetch
+  const getDeptTreeList = (params: any) => getDeptTree(params).then(data => ({ data, success: true }))
 
   const columns: ProColumns<DeptVO>[] = [
     {
@@ -25,6 +24,7 @@ export default function Dept() {
       title: '上级',
       dataIndex: 'parentId',
       valueType: 'treeSelect',
+      search: false,
       fieldProps: {
         fieldNames: { label: 'name', value: 'id' },
       },

@@ -1,6 +1,5 @@
 'use client'
 import type { ProColumns } from '@ant-design/pro-components'
-import ProCrud from '~/components/pro-crud'
 import { api } from '~/trpc/react'
 
 export default function Post() {

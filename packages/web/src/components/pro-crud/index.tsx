@@ -2,11 +2,7 @@
 import type { ActionType, ProColumns, ProTableProps } from '@ant-design/pro-components'
 import type { MaybePromise } from '@trpc/server/unstable-core-do-not-import'
 import type { GetProps } from 'antd'
-import { PlusOutlined } from '@ant-design/icons'
 import { BetaSchemaForm, ProTable } from '@ant-design/pro-components'
-import { Popconfirm, Tooltip } from 'antd'
-import { cloneDeep } from 'lodash-es'
-import { useRef } from 'react'
 
 type Data = Record<string, any>
 type SchemaFormProps<T, V = 'text'> = GetProps<typeof BetaSchemaForm<T, V>>
@@ -35,11 +31,11 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
       schema: RenderArgs[4]
     },
   ) => {
-    const entity = cloneDeep(args?.entity)
+    const entity = _cloneDeep(args?.entity)
     const defaultFormPropsByFormType: Record<FormType, Partial<SchemaFormProps<T, V>>> = {
       add: {
         title: '新增',
-        trigger: <Tooltip className="ant-pro-table-list-toolbar-setting-item" title="新增" children={<PlusOutlined />} />,
+        trigger: <ATooltip className="ant-pro-table-list-toolbar-setting-item" title="新增" children={<Icon icon="ant-design:plus-outlined" />} />,
         onFinish: async (form) => {
           form = { ...form }
           await props.onBeforeSubmit?.(formType, form)
@@ -76,7 +72,8 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
     return {
       ...defaultFormPropsByFormType[formType],
       layoutType: 'ModalForm',
-      modalProps: { destroyOnHidden: true, forceRender: true },
+      drawerProps: { destroyOnClose: true, forceRender: true },
+      modalProps: { destroyOnClose: true, forceRender: true },
       columns: props.columns,
       ...formProps,
     } as SchemaFormProps<T, V>
@@ -92,7 +89,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
         return [
           <BetaSchemaForm {...getFormProps('view', { dom, entity, index, action, schema })} />,
           <BetaSchemaForm {...getFormProps('edit', { dom, entity, index, action, schema })} />,
-          <Popconfirm
+          <APopconfirm
             title="删除"
             description="确认删除吗?"
             onConfirm={async () => {
@@ -113,7 +110,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
       columns={columns}
       actionRef={actionRef}
       tableAlertOptionRender={({ selectedRowKeys, onCleanSelected }) => [
-        <Popconfirm
+        <APopconfirm
           title="批量删除"
           description={`确认批量删除已选择的 ${selectedRowKeys.length} 项吗?`}
           onConfirm={async () => {

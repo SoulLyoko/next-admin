@@ -1,13 +1,11 @@
 'use client'
 /* eslint-disable node/prefer-global/process */
-
 import type { AppRouter } from '@app/server'
 import type { QueryClient } from '@tanstack/react-query'
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { QueryClientProvider } from '@tanstack/react-query'
 import { httpBatchStreamLink, loggerLink } from '@trpc/client'
 import { createTRPCReact } from '@trpc/react-query'
-import { useState } from 'react'
 
 import SuperJSON from 'superjson'
 import { createQueryClient } from './query-client'

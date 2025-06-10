@@ -1,4 +1,4 @@
-import { RolePartialSchema, RoleSchema } from '@app/db/zod'
+import { RolePartialSchema } from '@app/db/zod'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { PageSchema, R } from '../utils'
@@ -24,7 +24,7 @@ export const roleRouter = createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(RoleSchema)
+    .input(RolePartialSchema)
     .mutation(async ({ ctx, input }) => {
       const data = await ctx.db.role.update({ where: { id: input.id }, data: input })
       return data
@@ -33,9 +33,10 @@ export const roleRouter = createTRPCRouter({
   delete: protectedProcedure
     .input(z.string().or(z.string().array()))
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.dept.deleteMany({
-        where: { id: { in: Array.isArray(input) ? input : [input] } },
-      })
+      const inIds = { in: Array.isArray(input) ? input : [input] }
+      await ctx.db.rolesOnUsers.deleteMany({ where: { roleId: inIds } })
+      await ctx.db.menusOnRoles.deleteMany({ where: { roleId: inIds } })
+      const data = await ctx.db.role.deleteMany({ where: { id: inIds } })
       return data
     }),
 })
