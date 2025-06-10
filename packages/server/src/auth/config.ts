@@ -1,12 +1,13 @@
 import type { DefaultSession, NextAuthConfig, User } from 'next-auth'
 import type { JWT } from 'next-auth/jwt'
 import { randomUUID } from 'node:crypto'
+import { env } from 'node:process'
 
 import { PrismaAdapter } from '@auth/prisma-adapter'
-import DiscordProvider from 'next-auth/providers/discord'
-import GithubProvider from 'next-auth/providers/github'
+import Github from 'next-auth/providers/github'
+import Wechat from 'next-auth/providers/wechat'
 import { db } from '../db'
-import CredentialsProvider from './credentials'
+import Credentials from './credentials'
 
 /**
  * Module augmentation for `next-auth` types. Allows us to add custom properties to the `session`
@@ -39,9 +40,12 @@ export const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 day
  */
 export const authConfig = {
   providers: [
-    CredentialsProvider,
-    DiscordProvider,
-    GithubProvider,
+    Credentials,
+    Wechat({
+      clientId: env.AUTH_WECHAT_APP_ID,
+      clientSecret: env.AUTH_WECHAT_APP_SECRET,
+    }),
+    Github,
     /**
      * ...add more providers here.
      *
