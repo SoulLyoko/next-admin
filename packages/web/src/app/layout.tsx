@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
+import { Analytics } from '@vercel/analytics/next'
 import { TRPCReactProvider } from '~/trpc/react'
 import '@ant-design/v5-patch-for-react-19'
 import '@unocss/reset/tailwind.css'
@@ -20,6 +21,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
             {children}
           </AntdRegistry>
         </TRPCReactProvider>
+        <Analytics></Analytics>
       </body>
     </html>
   )

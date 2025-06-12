@@ -19,6 +19,7 @@
     "@trpc/react-query": "catalog:",
     "@unocss/postcss": "catalog:",
     "@unocss/reset": "catalog:",
+    "@vercel/analytics": "catalog:",
     "antd": "catalog:",
     "lodash-es": "catalog:",
     "next": "catalog:",
