@@ -16,7 +16,8 @@
     "db:seed": "pnpm -F db db:seed",
     "db:studio": "pnpm -F db db:studio",
     "postinstall": "npx simple-git-hooks && pnpm db:generate",
-    "lint": "eslint .",
+    "lint": "oxlint && eslint",
+    "lint:fix": "oxlint --fix && eslint --fix",
     "preview": "pnpm build && pnpm start",
     "typecheck": "tsc --noEmit",
     "upd": "taze major -r -l -I"
@@ -29,8 +30,10 @@
     "@unocss/eslint-plugin": "catalog:",
     "eslint": "catalog:",
     "eslint-plugin-format": "catalog:",
+    "eslint-plugin-oxlint": "catalog:",
     "lint-staged": "catalog:",
     "next": "catalog:",
+    "oxlint": "catalog:",
     "simple-git-hooks": "catalog:",
     "taze": "catalog:",
     "typescript": "catalog:"
@@ -43,6 +46,6 @@
     "extends": "@commitlint/config-conventional"
   },
   "lint-staged": {
-    "*": "eslint --fix"
+    "*": "pnpm lint:fix"
   }
 }
