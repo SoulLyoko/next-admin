@@ -1,87 +1,82 @@
 'use client'
-import type { ProColumns } from '@ant-design/pro-components'
 import type { RouterOutputs } from '~/trpc/react'
-
 import { api } from '~/trpc/react'
 
-type UserVO = RouterOutputs['user']['page']['data'][number] & {
-  deptIds?: string[]
-  roleIds?: string[]
-  postIds?: string[]
-}
+type User = Partial<RouterOutputs['user']['page']['data'][number]>
 
-export default function User() {
-  const createUser = api.user.create.useMutation().mutateAsync
-  const updateUser = api.user.update.useMutation().mutateAsync
-  const deleteUser = api.user.delete.useMutation().mutateAsync
-  const getUserPage = api.useUtils().user.page.fetch
-  const getPostList = api.useUtils().post.list.fetch
-  const getRoleList = api.useUtils().role.list.fetch
-  const getDeptTree = api.useUtils().dept.tree.fetch
+export default function SysUser() {
+  const getDict = api.useUtils().dict.data.fetch
 
-  const columns: ProColumns<UserVO>[] = [
-    {
-      title: '姓名',
-      dataIndex: 'name',
-      formItemProps: {
-        rules: [{ required: true, message: '此项为必填项' }],
+  const crudProps = defineProCrudProps<User>({
+    rowKey: 'id',
+    request: api.useUtils().user.page.fetch,
+    create: api.user.create.useMutation().mutateAsync,
+    update: api.user.update.useMutation().mutateAsync,
+    delete: api.user.delete.useMutation().mutateAsync,
+    columns: [
+      {
+        title: '姓名',
+        dataIndex: 'name',
+        formItemProps: {
+          rules: [{ required: true }],
+        },
       },
-    },
-    {
-      title: '邮箱',
-      dataIndex: 'email',
-      search: false,
-    },
-    {
-      title: '部门',
-      dataIndex: 'deptIds',
-      valueType: 'treeSelect',
-      fieldProps: {
-        multiple: true,
-        fieldNames: { label: 'name', value: 'id' },
+      {
+        title: '性别',
+        dataIndex: 'sex',
+        search: false,
+        valueType: 'treeSelect',
+        request: () => getDict('sex'),
       },
-      request: getDeptTree,
-      render(dom, entity) {
-        return entity.depts?.map(e => e.dept?.name)?.join(',')
+      {
+        title: '邮箱',
+        dataIndex: 'email',
+        search: false,
       },
-    },
-    {
-      title: '岗位',
-      dataIndex: 'postIds',
-      valueType: 'select',
-      fieldProps: {
-        mode: 'multiple',
-        fieldNames: { label: 'name', value: 'id' },
+      {
+        title: '部门',
+        dataIndex: 'deptIds',
+        search: false,
+        valueType: 'treeSelect',
+        fieldProps: {
+          multiple: true,
+          fieldNames: { label: 'name', value: 'id' },
+        },
+        request: api.useUtils().dept.tree.fetch,
+        render(dom, row) {
+          return row.depts?.map(e => e.dept?.name)?.join(',')
+        },
       },
-      request: getPostList,
-      render(dom, entity) {
-        return entity.posts?.map(e => e.post?.name)?.join(',')
+      {
+        title: '岗位',
+        dataIndex: 'postIds',
+        search: false,
+        valueType: 'select',
+        fieldProps: {
+          mode: 'multiple',
+          fieldNames: { label: 'name', value: 'id' },
+        },
+        request: api.useUtils().post.list.fetch,
+        render(dom, row) {
+          return row.posts?.map(e => e.post?.name)?.join(',')
+        },
       },
-    },
-    {
-      title: '角色',
-      dataIndex: 'roleIds',
-      valueType: 'select',
-      fieldProps: {
-        mode: 'multiple',
-        fieldNames: { label: 'name', value: 'id' },
+      {
+        title: '角色',
+        dataIndex: 'roleIds',
+        search: false,
+        valueType: 'select',
+        fieldProps: {
+          mode: 'multiple',
+          fieldNames: { label: 'name', value: 'id' },
+        },
+        request: api.useUtils().role.list.fetch,
+        render(dom, row) {
+          return row.roles?.map(e => e.role?.name)?.join(',')
+        },
       },
-      request: getRoleList,
-      render(dom, entity) {
-        return entity.roles?.map(e => e.role?.name)?.join(',')
-      },
-    },
-  ]
+    ],
+  })
 
-  return (
-    <ProCrud
-      rowKey="id"
-      columns={columns}
-      request={getUserPage}
-      create={createUser}
-      update={updateUser}
-      delete={deleteUser}
-      batchDelete={deleteUser}
-    />
-  )
+  return <ProCrud {...crudProps} />
 }

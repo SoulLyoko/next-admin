@@ -10,6 +10,7 @@ export default function AutoImportCustom() {
   return AutoImport({
     include: [/\.[tj]sx?$/],
     imports: ['react', componentsImports(), lodashImports(), antdImports(), antdProImports()],
+    dirs: ['src/hooks', 'src/utils'],
     dts: './auto-imports.d.ts',
   })
 }

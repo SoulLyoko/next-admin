@@ -1,32 +1,24 @@
 'use client'
-import type { ProColumns } from '@ant-design/pro-components'
+import type { PostPartial } from '@app/db/zod'
 import { api } from '~/trpc/react'
 
-export default function Post() {
-  const createPost = api.post.create.useMutation().mutateAsync
-  const updatePost = api.post.update.useMutation().mutateAsync
-  const deletePost = api.post.delete.useMutation().mutateAsync
-  const getPostPage = api.useUtils().post.page.fetch
-
-  const columns: ProColumns[] = [
-    {
-      title: '名称',
-      dataIndex: 'name',
-      formItemProps: {
-        rules: [{ required: true, message: '此项为必填项' }],
+export default function SysPost() {
+  const crudProps = defineProCrudProps<PostPartial>({
+    rowKey: 'id',
+    request: api.useUtils().post.page.fetch,
+    create: api.post.create.useMutation().mutateAsync,
+    update: api.post.update.useMutation().mutateAsync,
+    delete: api.post.delete.useMutation().mutateAsync,
+    columns: [
+      {
+        title: '名称',
+        dataIndex: 'name',
+        formItemProps: {
+          rules: [{ required: true }],
+        },
       },
-    },
-  ]
+    ],
+  })
 
-  return (
-    <ProCrud
-      rowKey="id"
-      columns={columns}
-      request={getPostPage}
-      create={createPost}
-      update={updatePost}
-      delete={deletePost}
-      batchDelete={deletePost}
-    />
-  )
+  return <ProCrud {...crudProps} />
 }

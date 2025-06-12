@@ -1,5 +1,6 @@
 import { createCallerFactory, createTRPCRouter } from '../trpc'
 import { deptRouter } from './dept'
+import { dictRouter } from './dict'
 import { menuRouter } from './menu'
 import { postRouter } from './post'
 import { roleRouter } from './role'
@@ -16,6 +17,7 @@ export const appRouter = createTRPCRouter({
   role: roleRouter,
   user: userRouter,
   menu: menuRouter,
+  dict: dictRouter,
 })
 
 // export type definition of API

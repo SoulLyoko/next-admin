@@ -11,10 +11,12 @@ export const postRouter = createTRPCRouter({
       return R.success(res)
     }),
 
-  list: protectedProcedure.input(PostPartialSchema).query(async ({ ctx, input }) => {
-    const data = await ctx.db.post.findMany({ where: input })
-    return data
-  }),
+  list: protectedProcedure
+    .input(PostPartialSchema)
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db.post.findMany({ where: input })
+      return data
+    }),
 
   create: protectedProcedure
     .input(PostPartialSchema)

@@ -69,6 +69,7 @@ async function main() {
     sys_role: 'cmbohoabw00053j6qafev69a1',
     sys_user: 'cmbohnl4600023j6q7cgfd7be',
     sys_menu: 'cmbohu27500063j6q2o6xfhgn',
+    sys_dict: 'cmbq64efq0001sspwev8fomz9',
   }
   await prisma.menu.upsert({
     where: { id: menuIds.sys },
@@ -84,6 +85,50 @@ async function main() {
             { id: menuIds.sys_role, name: '角色管理', path: '/sys/role', icon: 'ant-design:user-add-outlined' },
             { id: menuIds.sys_user, name: '用户管理', path: '/sys/user', icon: 'ant-design:user-outlined' },
             { id: menuIds.sys_menu, name: '菜单管理', path: '/sys/menu', icon: 'ant-design:appstore-add-outlined' },
+            { id: menuIds.sys_dict, name: '数据字典', path: '/sys/dict', icon: 'ant-design:book-outlined' },
+          ],
+        },
+      },
+    },
+    update: {},
+  })
+
+  const dictIds = {
+    sex: 'cmbq74fx60000ssvo7dvdver5',
+    sex_1: 'cmbq74q2y0002ssvor7zlqyfj',
+    sex_0: 'cmbq750q30004ssvoikmh36ec',
+    whether: 'cmbrrmjjz0004sslount9x09r',
+    whether_0: 'cmbrrnga00006sslo90orny78',
+    whether_1: 'cmbrrnlpi0008ssloxj3vz7ce',
+  }
+  await prisma.dict.upsert({
+    where: { id: dictIds.sex },
+    create: {
+      id: dictIds.sex,
+      label: '性别',
+      value: 'sex',
+      children: {
+        createMany: {
+          data: [
+            { id: dictIds.sex_1, label: '男', value: '1' },
+            { id: dictIds.sex_0, label: '女', value: '0' },
+          ],
+        },
+      },
+    },
+    update: {},
+  })
+  await prisma.dict.upsert({
+    where: { id: dictIds.whether },
+    create: {
+      id: dictIds.whether,
+      label: '是否',
+      value: 'whether',
+      children: {
+        createMany: {
+          data: [
+            { id: dictIds.whether_1, label: '否', value: '0' },
+            { id: dictIds.whether_0, label: '是', value: '1 ' },
           ],
         },
       },

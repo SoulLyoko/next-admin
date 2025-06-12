@@ -65,10 +65,12 @@ export const userRouter = createTRPCRouter({
       })
     }),
 
-  list: protectedProcedure.input(UserPartialSchema).query(async ({ ctx, input }) => {
-    const data = await ctx.db.user.findMany({ where: userWhere(input) })
-    return data
-  }),
+  list: protectedProcedure
+    .input(UserPartialSchema)
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db.user.findMany({ where: userWhere(input) })
+      return data
+    }),
 
   create: protectedProcedure
     .input(UserPartialSchema)

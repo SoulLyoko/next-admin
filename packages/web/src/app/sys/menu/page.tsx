@@ -1,56 +1,57 @@
 'use client'
-import type { ProColumns } from '@ant-design/pro-components'
-import type { RouterOutputs } from '~/trpc/react'
+import type { MenuPartialWithRelations } from '@app/db/zod'
+import type { CrudInstance } from '~/components/pro-crud'
 import { api } from '~/trpc/react'
 
-type MenuVO = RouterOutputs['menu']['tree'][number]
+type Menu = MenuPartialWithRelations
 
-export default function Menu() {
-  const createMenu = api.menu.create.useMutation().mutateAsync
-  const updateMenu = api.menu.update.useMutation().mutateAsync
-  const deleteMenu = api.menu.delete.useMutation().mutateAsync
+export default function SysMenu() {
   const getMenuTree = api.useUtils().menu.tree.fetch
-  const getMenuTreeList = (params: any) => getMenuTree(params).then(data => ({ data, success: true }))
 
-  const columns: ProColumns<MenuVO>[] = [
-    {
-      title: '名称',
-      dataIndex: 'name',
-      formItemProps: {
-        rules: [{ required: true, message: '此项为必填项' }],
+  const crudRef = useRef<CrudInstance<Menu>>(undefined)
+  const crudProps = defineProCrudProps<Menu>({
+    crudRef,
+    rowKey: 'id',
+    request: params => getMenuTree(params).then(data => ({ data, success: true })),
+    create: api.dept.create.useMutation().mutateAsync,
+    update: api.dept.update.useMutation().mutateAsync,
+    delete: api.dept.delete.useMutation().mutateAsync,
+    batchDelete: api.dept.delete.useMutation().mutateAsync,
+    optionBefore: (dom, row) => <a onClick={() => crudRef.current?.onAdd({ parentId: row.id })}>新增下级</a>,
+    rowSelection: {},
+    columns: [
+      {
+        title: '名称',
+        dataIndex: 'name',
+        formItemProps: {
+          rules: [{ required: true }],
+        },
       },
-    },
-    {
-      title: '路径',
-      dataIndex: 'path',
-    },
-    {
-      title: '图标',
-      dataIndex: 'icon',
-    },
-    {
-      title: '上级',
-      dataIndex: 'parentId',
-      valueType: 'treeSelect',
-      search: false,
-      fieldProps: {
-        fieldNames: { label: 'name', value: 'id' },
+      {
+        title: '路径',
+        dataIndex: 'path',
+        search: false,
       },
-      request: getMenuTree,
-      render(dom, entity) {
-        return entity.parent?.name
+      {
+        title: '图标',
+        dataIndex: 'icon',
+        search: false,
       },
-    },
-  ]
+      {
+        title: '上级',
+        dataIndex: 'parentId',
+        valueType: 'treeSelect',
+        search: false,
+        fieldProps: {
+          fieldNames: { label: 'name', value: 'id' },
+        },
+        request: getMenuTree,
+        render(dom, row) {
+          return row.parent?.name
+        },
+      },
+    ],
+  })
 
-  return (
-    <ProCrud
-      rowKey="id"
-      columns={columns}
-      request={getMenuTreeList}
-      create={createMenu}
-      update={updateMenu}
-      delete={deleteMenu}
-    />
-  )
+  return <ProCrud {...crudProps} />
 }

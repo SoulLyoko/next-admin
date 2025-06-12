@@ -1,5 +1,4 @@
 'use client'
-/* eslint-disable node/prefer-global/process */
 import type { AppRouter } from '@app/server'
 import type { QueryClient } from '@tanstack/react-query'
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
@@ -46,7 +45,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
       links: [
         loggerLink({
           enabled: op =>
-            process.env.NODE_ENV === 'development'
+            getEnv()?.NODE_ENV === 'development'
             || (op.direction === 'down' && op.result instanceof Error),
         }),
         httpBatchStreamLink({
@@ -74,7 +73,7 @@ export function TRPCReactProvider(props: { children: React.ReactNode }) {
 function getBaseUrl() {
   if (typeof window !== 'undefined')
     return window.location.origin
-  if (process.env.VERCEL_URL)
-    return `https://${process.env.VERCEL_URL}`
-  return `http://localhost:${process.env.PORT ?? 3000}`
+  if (getEnv().VERCEL_URL)
+    return `https://${getEnv().VERCEL_URL}`
+  return `http://localhost:${getEnv().PORT ?? 3000}`
 }

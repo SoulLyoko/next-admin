@@ -1,17 +1,7 @@
-import type { Prisma } from '@prisma/client'
 import { DeptPartialSchema } from '@app/db/zod'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
-
-let treeInclude: Prisma.DeptInclude = {}
-for (let i = 0; i < 9; i++) {
-  if (i === 0) {
-    treeInclude = { parent: true, children: true }
-  }
-  else {
-    treeInclude = { parent: true, children: { include: treeInclude } }
-  }
-}
+import { getTreeInclude } from '../utils'
 
 export const deptRouter = createTRPCRouter({
   tree: protectedProcedure
@@ -19,7 +9,7 @@ export const deptRouter = createTRPCRouter({
     .query(async ({ ctx, input }) => {
       const { name } = input
       const data = await ctx.db.dept.findMany({
-        include: treeInclude,
+        include: getTreeInclude(),
         where: name ? { name } : { parentId: null },
       })
       return data

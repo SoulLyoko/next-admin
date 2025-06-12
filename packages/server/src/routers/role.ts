@@ -11,10 +11,12 @@ export const roleRouter = createTRPCRouter({
       return R.success(res)
     }),
 
-  list: protectedProcedure.input(RolePartialSchema).query(async ({ ctx, input }) => {
-    const data = await ctx.db.role.findMany({ where: input })
-    return data
-  }),
+  list: protectedProcedure
+    .input(RolePartialSchema)
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db.role.findMany({ where: input })
+      return data
+    }),
 
   create: protectedProcedure
     .input(RolePartialSchema)

@@ -5,12 +5,14 @@ generator client {
     provider = "prisma-client-js"
 }
 
+// https://github.com/chrishoermann/zod-prisma-types
 generator zod {
-    provider           = "zod-prisma-types"
-    output             = "./zod"
-    useMultipleFiles   = true
-    createInputTypes   = false
-    createPartialTypes = true
+    provider                  = "zod-prisma-types"
+    output                    = "./zod"
+    useMultipleFiles          = true
+    createInputTypes          = false
+    createPartialTypes        = true
+    createRelationValuesTypes = true
 }
 
 datasource db {
@@ -59,106 +61,133 @@ model VerificationToken {
 }
 
 model User {
-    id        String         @id @default(cuid())
-    createdAt DateTime       @default(now())
-    updatedAt DateTime       @updatedAt
+    id       String  @id @default(cuid())
+    name     String?
+    email    String?
+    password String?
+
+    accounts Account[]
+    sessions Session[]
+    posts    PostsOnUsers[]
+    roles    RolesOnUsers[]
+    depts    DeptsOnUsers[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
-    name      String?
-    email     String?
-    password  String?
-    accounts  Account[]
-    sessions  Session[]
-    posts     PostsOnUsers[]
-    roles     RolesOnUsers[]
-    depts     DeptsOnUsers[]
 }
 
 model Post {
-    id        String         @id @default(cuid())
-    createdAt DateTime       @default(now())
-    updatedAt DateTime       @updatedAt
+    id   String  @id @default(cuid())
+    name String?
+
+    users PostsOnUsers[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
-    name      String?
-    users     PostsOnUsers[]
 
     @@index([name])
 }
 
 model PostsOnUsers {
     post   Post   @relation(fields: [postId], references: [id])
-    postId String // relation scalar field (used in the `@relation` attribute above)
+    postId String
     user   User   @relation(fields: [userId], references: [id])
-    userId String // relation scalar field (used in the `@relation` attribute above)
+    userId String
 
     @@id([postId, userId])
 }
 
 model Role {
-    id        String         @id @default(cuid())
-    createdAt DateTime       @default(now())
-    updatedAt DateTime       @updatedAt
+    id   String  @id @default(cuid())
+    name String?
+
+    users RolesOnUsers[]
+    menus MenusOnRoles[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
-    name      String?
-    users     RolesOnUsers[]
-    menus     MenusOnRoles[]
 
     @@index([name])
 }
 
 model RolesOnUsers {
     role   Role   @relation(fields: [roleId], references: [id])
-    roleId String // relation scalar field (used in the `@relation` attribute above)
+    roleId String
     user   User   @relation(fields: [userId], references: [id])
-    userId String // relation scalar field (used in the `@relation` attribute above)
+    userId String
 
     @@id([roleId, userId])
 }
 
 model Dept {
-    id        String         @id @default(cuid())
-    createdAt DateTime       @default(now())
-    updatedAt DateTime       @updatedAt
+    id   String  @id @default(cuid())
+    name String?
+
+    parentId String?
+    parent   Dept?   @relation("DeptTree", fields: [parentId], references: [id])
+    children Dept[]  @relation("DeptTree")
+
+    users DeptsOnUsers[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
-    name      String?
-    parentId  String?
-    parent    Dept?          @relation("DeptTree", fields: [parentId], references: [id])
-    children  Dept[]         @relation("DeptTree")
-    users     DeptsOnUsers[]
 }
 
 model DeptsOnUsers {
     dept   Dept   @relation(fields: [deptId], references: [id])
-    deptId String // relation scalar field (used in the `@relation` attribute above)
+    deptId String
     user   User   @relation(fields: [userId], references: [id])
-    userId String // relation scalar field (used in the `@relation` attribute above)
+    userId String
 
     @@id([deptId, userId])
 }
 
 model Menu {
-    id        String         @id @default(cuid())
-    createdAt DateTime       @default(now())
-    updatedAt DateTime       @updatedAt
+    id   String  @id @default(cuid())
+    icon String?
+    name String?
+    path String?
+
+    parentId String?
+    parent   Menu?   @relation("MenuTree", fields: [parentId], references: [id])
+    children Menu[]  @relation("MenuTree")
+
+    roles MenusOnRoles[]
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
-    icon      String?
-    name      String?
-    path      String?
-    parentId  String?
-    parent    Menu?          @relation("MenuTree", fields: [parentId], references: [id])
-    children  Menu[]         @relation("MenuTree")
-    roles     MenusOnRoles[]
 }
 
 model MenusOnRoles {
     menu   Menu   @relation(fields: [menuId], references: [id])
-    menuId String // relation scalar field (used in the `@relation` attribute above)
+    menuId String
     role   Role   @relation(fields: [roleId], references: [id])
-    roleId String // relation scalar field (used in the `@relation` attribute above)
+    roleId String
 
     @@id([menuId, roleId])
+}
+
+model Dict {
+    id    String  @id @default(cuid())
+    label String?
+    value String
+
+    parentId String?
+    parent   Dict?   @relation("DictTree", fields: [parentId], references: [id])
+    children Dict[]  @relation("DictTree")
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    createdBy String?
+    updatedBy String?
 }

@@ -17,16 +17,14 @@ function createPrismaClient() {
           const { where, ...findManyArgs } = args ?? {}
           const { current = 1, pageSize = 10, ...whereArgs } = where as any
 
-          // eslint-disable-next-line ts/ban-ts-comment
-          // @ts-expect-error
+          // @ts-ignore
           const data: Awaited<ReturnType<PrismaClient[T]['findMany']>> = await ctx.findMany({
             take: pageSize,
             skip: pageSize * (current - 1),
             where: whereArgs,
             ...findManyArgs,
           })
-          // eslint-disable-next-line ts/ban-ts-comment
-          // @ts-expect-error
+          // @ts-ignore
           const total: number = await ctx.count({ where: whereArgs })
           return { data, total }
         },

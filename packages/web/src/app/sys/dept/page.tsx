@@ -1,48 +1,47 @@
 'use client'
-import type { ProColumns } from '@ant-design/pro-components'
-import type { RouterOutputs } from '~/trpc/react'
+import type { DeptPartialWithRelations } from '@app/db/zod'
+import type { CrudInstance } from '~/components/pro-crud'
 import { api } from '~/trpc/react'
 
-type DeptVO = RouterOutputs['dept']['tree'][number]
+type Dept = DeptPartialWithRelations
 
-export default function Dept() {
-  const createDept = api.dept.create.useMutation().mutateAsync
-  const updateDept = api.dept.update.useMutation().mutateAsync
-  const deleteDept = api.dept.delete.useMutation().mutateAsync
+export default function SysDept() {
   const getDeptTree = api.useUtils().dept.tree.fetch
-  const getDeptTreeList = (params: any) => getDeptTree(params).then(data => ({ data, success: true }))
 
-  const columns: ProColumns<DeptVO>[] = [
-    {
-      title: '名称',
-      dataIndex: 'name',
-      formItemProps: {
-        rules: [{ required: true, message: '此项为必填项' }],
+  const crudRef = useRef<CrudInstance<Dept>>(undefined)
+  const crudProps = defineProCrudProps<Dept>({
+    crudRef,
+    rowKey: 'id',
+    request: params => getDeptTree(params).then(data => ({ data, success: true })),
+    create: api.dept.create.useMutation().mutateAsync,
+    update: api.dept.update.useMutation().mutateAsync,
+    delete: api.dept.delete.useMutation().mutateAsync,
+    batchDelete: api.dept.delete.useMutation().mutateAsync,
+    optionBefore: (dom, row) => <a onClick={() => crudRef.current?.onAdd({ parentId: row.id })}>新增下级</a>,
+    rowSelection: {},
+    columns: [
+      {
+        title: '名称',
+        dataIndex: 'name',
+        formItemProps: {
+          rules: [{ required: true }],
+        },
       },
-    },
-    {
-      title: '上级',
-      dataIndex: 'parentId',
-      valueType: 'treeSelect',
-      search: false,
-      fieldProps: {
-        fieldNames: { label: 'name', value: 'id' },
+      {
+        title: '上级',
+        dataIndex: 'parentId',
+        valueType: 'treeSelect',
+        search: false,
+        fieldProps: {
+          fieldNames: { label: 'name', value: 'id' },
+        },
+        request: getDeptTree,
+        render(dom, row) {
+          return row.parent?.name
+        },
       },
-      request: getDeptTree,
-      render(dom, entity) {
-        return entity.parent?.name
-      },
-    },
-  ]
+    ],
+  })
 
-  return (
-    <ProCrud
-      rowKey="id"
-      columns={columns}
-      request={getDeptTreeList}
-      create={createDept}
-      update={updateDept}
-      delete={deleteDept}
-    />
-  )
+  return <ProCrud {...crudProps} />
 }
