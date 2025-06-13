@@ -1,4 +1,3 @@
-import type { PageResult } from '../utils'
 import { Prisma } from '@prisma/client'
 
 interface FindTreeArgs {
@@ -38,7 +37,7 @@ export function tree() {
         async findTree<T, A>(
           this: T,
           args?: Prisma.Exact<A, Prisma.Args<T, 'findMany'>>,
-        ): Promise<PageResult<Prisma.Result<T, A, 'findMany'>>> {
+        ): Promise<Prisma.Result<T, A, 'findMany'>> {
           const ctx: any = Prisma.getExtensionContext(this)
           const { where, ...restArgs } = args ?? {} as any
           const data = await ctx.findMany({
