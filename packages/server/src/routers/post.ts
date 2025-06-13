@@ -1,14 +1,14 @@
 import { PostPartialSchema } from '@app/db/zod'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
-import { PageSchema, R } from '../utils'
+import { PageSchema } from '../utils'
 
 export const postRouter = createTRPCRouter({
   page: protectedProcedure
     .input(PageSchema.and(PostPartialSchema))
     .query(async ({ ctx, input }) => {
-      const res = await ctx.db.post.pagination<'post'>({ where: input })
-      return R.success(res)
+      const res = await ctx.db.post.pagination({ where: input })
+      return res
     }),
 
   list: protectedProcedure

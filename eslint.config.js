@@ -6,5 +6,5 @@ export default antfu(
     unocss: true,
     formatters: true,
   },
-  oxlint.configs['flat/all'],
+  oxlint.configs['flat/recommended'],
 )

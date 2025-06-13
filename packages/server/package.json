@@ -8,6 +8,7 @@
     "@prisma/client": "catalog:",
     "@trpc/server": "catalog:",
     "next-auth": "catalog:",
+    "prisma-extension-soft-delete": "catalog:",
     "react": "catalog:",
     "server-only": "catalog:",
     "superjson": "catalog:",

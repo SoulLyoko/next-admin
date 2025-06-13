@@ -2,7 +2,7 @@ import type { UserPartial } from '@app/db/zod'
 import { UserPartialSchema } from '@app/db/zod'
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure, publicProcedure } from '../trpc'
-import { PageSchema, parsePage, R } from '../utils'
+import { PageSchema } from '../utils'
 
 const userWhere = (input?: UserPartial) => ({ ...input, name: { contains: input?.name ?? '' } })
 
@@ -34,35 +34,23 @@ export const userRouter = createTRPCRouter({
   page: protectedProcedure
     .input(UserPartialSchema.merge(PageSchema))
     .query(async ({ ctx, input }) => {
-      // const res = await ctx.db.user.pagination<'user'>({
-      //   include: {
-      //     posts: { include: { post: true } },
-      //     roles: { include: { role: true } },
-      //     depts: { include: { dept: true } },
-      //   },
-      //   where: userWhere(input),
-      // })
-      // return R.success(res)
-      const { where, ...page } = parsePage(input)
-      const data = await ctx.db.user.findMany({
-        ...page,
-        where: userWhere(where),
+      const res = await ctx.db.user.pagination({
         include: {
-          depts: { include: { dept: true } },
           posts: { include: { post: true } },
           roles: { include: { role: true } },
+          depts: { include: { dept: true } },
         },
+        where: userWhere(input),
       })
-      const total = await ctx.db.user.count({ where: userWhere(where) })
-      return R.success({
-        data: data.map(d => ({
+      return {
+        ...res,
+        data: res.data.map(d => ({
           ...d,
           deptIds: d.depts.map(e => e.deptId),
           postIds: d.posts.map(e => e.postId),
           roleIds: d.roles.map(e => e.roleId),
         })),
-        total,
-      })
+      }
     }),
 
   list: protectedProcedure

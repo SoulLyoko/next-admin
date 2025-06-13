@@ -76,6 +76,7 @@ model User {
     updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
+    deleted   Boolean  @default(false)
 }
 
 model Post {
@@ -88,6 +89,7 @@ model Post {
     updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
+    deleted   Boolean  @default(false)
 
     @@index([name])
 }
@@ -112,6 +114,7 @@ model Role {
     updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
+    deleted   Boolean  @default(false)
 
     @@index([name])
 }
@@ -139,6 +142,7 @@ model Dept {
     updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
+    deleted   Boolean  @default(false)
 }
 
 model DeptsOnUsers {
@@ -166,6 +170,7 @@ model Menu {
     updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
+    deleted   Boolean  @default(false)
 }
 
 model MenusOnRoles {
@@ -190,4 +195,5 @@ model Dict {
     updatedAt DateTime @updatedAt
     createdBy String?
     updatedBy String?
+    deleted   Boolean  @default(false)
 }

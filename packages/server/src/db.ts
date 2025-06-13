@@ -1,36 +1,14 @@
-import type { Prisma } from '@prisma/client'
-import type { Page } from './utils'
 import process from 'node:process'
 import { PrismaClient } from '@prisma/client'
+import { pagination, softDelete, tree } from './extensions'
 
 function createPrismaClient() {
   return new PrismaClient({
-    log:
-      process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
-  }).$extends({
-    model: {
-      $allModels: {
-        async pagination<T extends Prisma.TypeMap['meta']['modelProps'], P = Parameters<PrismaClient[T]['findMany']>[number]>(
-          args?: P & { where?: Page },
-        ) {
-          const ctx = this as unknown as PrismaClient[T]
-          const { where, ...findManyArgs } = args ?? {}
-          const { current = 1, pageSize = 10, ...whereArgs } = where as any
-
-          // @ts-ignore
-          const data: Awaited<ReturnType<PrismaClient[T]['findMany']>> = await ctx.findMany({
-            take: pageSize,
-            skip: pageSize * (current - 1),
-            where: whereArgs,
-            ...findManyArgs,
-          })
-          // @ts-ignore
-          const total: number = await ctx.count({ where: whereArgs })
-          return { data, total }
-        },
-      },
-    },
+    log: process.env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error'],
   })
+    .$extends(pagination())
+    .$extends(softDelete())
+    .$extends(tree())
 }
 
 const globalForPrisma = globalThis as unknown as {
