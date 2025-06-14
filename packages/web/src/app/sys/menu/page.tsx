@@ -13,16 +13,17 @@ export default function SysMenu() {
     crudRef,
     rowKey: 'id',
     request: params => getMenuTree(params).then(data => ({ data, success: true })),
-    create: api.dept.create.useMutation().mutateAsync,
-    update: api.dept.update.useMutation().mutateAsync,
-    delete: api.dept.delete.useMutation().mutateAsync,
-    batchDelete: api.dept.delete.useMutation().mutateAsync,
+    create: api.menu.create.useMutation().mutateAsync,
+    update: api.menu.update.useMutation().mutateAsync,
+    delete: api.menu.delete.useMutation().mutateAsync,
+    batchDelete: api.menu.delete.useMutation().mutateAsync,
     optionBefore: (dom, row) => <a onClick={() => crudRef.current?.onAdd({ parentId: row.id })}>新增下级</a>,
     rowSelection: {},
     columns: [
       {
         title: '名称',
         dataIndex: 'name',
+        search: true,
         formItemProps: {
           rules: [{ required: true }],
         },
@@ -30,18 +31,15 @@ export default function SysMenu() {
       {
         title: '路径',
         dataIndex: 'path',
-        search: false,
       },
       {
         title: '图标',
         dataIndex: 'icon',
-        search: false,
       },
       {
         title: '上级',
         dataIndex: 'parentId',
         valueType: 'treeSelect',
-        search: false,
         fieldProps: {
           fieldNames: { label: 'name', value: 'id' },
         },

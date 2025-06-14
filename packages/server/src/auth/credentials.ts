@@ -1,4 +1,5 @@
 import { randomUUID } from 'node:crypto'
+// import { AuthError } from 'next-auth'
 import CredentialsProvider from 'next-auth/providers/credentials'
 import { z } from 'zod'
 import { db } from '../db'
@@ -23,6 +24,7 @@ export default CredentialsProvider({
     user = await db.user.findFirst({ where: { name, password } })
 
     if (!user) {
+      // throw new AuthError('Sign in failed. Check the name and password fields are correct')
       return null
     }
 

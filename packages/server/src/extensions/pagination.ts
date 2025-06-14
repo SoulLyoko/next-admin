@@ -29,7 +29,7 @@ export function pagination(config?: PaginationConfig) {
             where,
             ...restArgs,
           })
-          const total = await ctx.count({ where, ...restArgs })
+          const total = await ctx.count({ where })
 
           return { data, total, success: true }
         },

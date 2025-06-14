@@ -7,8 +7,19 @@ export const roleRouter = createTRPCRouter({
   page: protectedProcedure
     .input(PageSchema.and(RolePartialSchema))
     .query(async ({ ctx, input }) => {
-      const res = await ctx.db.role.pagination({ where: input })
-      return res
+      const res = await ctx.db.role.pagination({
+        include: {
+          menus: { include: { menu: true } },
+        },
+        where: input,
+      })
+      return {
+        ...res,
+        data: res.data.map(d => ({
+          ...d,
+          menuIds: d.menus.map(e => e.menuId),
+        })),
+      }
     }),
 
   list: protectedProcedure
@@ -19,16 +30,36 @@ export const roleRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(RolePartialSchema)
+    .input(RolePartialSchema.merge(z.object({
+      menuIds: z.string().array().optional(),
+    })))
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.role.create({ data: input })
+      const { menuIds, ...createData } = input
+      const data = await ctx.db.role.create({ data: {
+        ...createData,
+        menus: {
+          createMany: { data: menuIds?.map(menuId => ({ menuId })) ?? [] },
+        },
+      } })
       return data
     }),
 
   update: protectedProcedure
-    .input(RolePartialSchema)
+    .input(RolePartialSchema.merge(z.object({
+      menuIds: z.string().array().optional(),
+    })))
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.role.update({ where: { id: input.id }, data: input })
+      const { id, menuIds, ...updateData } = input
+      const data = await ctx.db.role.update({
+        where: { id: input.id },
+        data: {
+          ...updateData,
+          menus: {
+            deleteMany: { roleId: id },
+            createMany: { data: menuIds?.map(menuId => ({ menuId })) ?? [] },
+          },
+        },
+      })
       return data
     }),
 

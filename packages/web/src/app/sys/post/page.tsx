@@ -13,6 +13,7 @@ export default function SysPost() {
       {
         title: '名称',
         dataIndex: 'name',
+        search: true,
         formItemProps: {
           rules: [{ required: true }],
         },

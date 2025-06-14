@@ -23,6 +23,7 @@ export default function SysDept() {
       {
         title: '名称',
         dataIndex: 'name',
+        search: true,
         formItemProps: {
           rules: [{ required: true }],
         },
@@ -31,7 +32,6 @@ export default function SysDept() {
         title: '上级',
         dataIndex: 'parentId',
         valueType: 'treeSelect',
-        search: false,
         fieldProps: {
           fieldNames: { label: 'name', value: 'id' },
         },

@@ -1,10 +1,10 @@
 'use client'
-import type { ActionType, BetaSchemaForm, ProColumns, ProFormInstance, ProTableProps } from '@ant-design/pro-components'
+import type { ActionType, BetaSchemaForm, ProColumns, ProFormColumnsType, ProFormInstance, ProTableProps } from '@ant-design/pro-components'
 import type { MaybePromise } from '@trpc/server/unstable-core-do-not-import'
 import type { GetProps } from 'antd'
 
 type Data = Record<string, any>
-type SchemaFormProps<T, V = 'text'> = GetProps<typeof BetaSchemaForm<T, V>>
+type SchemaFormProps<T, V> = GetProps<typeof BetaSchemaForm<T, V>>
 type FormType = 'add' | 'edit' | 'view'
 type ColumnRenderArgs<T, V> = Parameters<NonNullable<ProColumns<T, V>['render']>>
 
@@ -17,7 +17,10 @@ export interface CrudInstance<T = any> {
   onBatchRemove: (selectedRowKeys: React.Key[], selectedRows: T[]) => MaybePromise<void>
 }
 
+export type ProCrudColumns<T = any, V = 'text'> = ProColumns<T, V> & ProFormColumnsType<T, V>
+
 export type ProCrudProps<T = any, P = any, V = 'text'> = ProTableProps<T, P, V> & {
+  columns?: ProCrudColumns<T, V>[]
   crudRef?: React.RefObject<CrudInstance<T> | undefined>
   formProps?: Omit<SchemaFormProps<T, V>, 'columns' | 'formRef'>
   create?: (data: T | any) => MaybePromise<any>
@@ -97,7 +100,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
       columns: restProps.columns,
       title: '查看',
       initialValues: { ...row },
-      disabled: true,
+      readonly: true,
       submitter: { render: () => [] },
     } as SchemaFormProps<T, V>)
   }
@@ -119,7 +122,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
   useImperativeHandle(propsCrudRef, () => ({ formType, onAdd, onEdit, onView, onRemove, onBatchRemove }), [])
 
   const columns = [
-    ...restProps.columns ?? [],
+    ...restProps.columns?.map(e => ({ search: false, ...e })) ?? [],
     {
       title: '操作',
       valueType: 'option',
@@ -208,6 +211,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
   return (
     <>
       <ProTable<T, P, V>
+        search={columns.some(e => e.search) ? {} : false}
         {...restProps}
         columns={columns}
         actionRef={actionRef}

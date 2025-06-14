@@ -70,6 +70,7 @@ async function main() {
     sys_user: 'cmbohnl4600023j6q7cgfd7be',
     sys_menu: 'cmbohu27500063j6q2o6xfhgn',
     sys_dict: 'cmbq64efq0001sspwev8fomz9',
+    sys_log: 'cmbv1bafq00174olq3q69sfli',
   }
   await prisma.menu.upsert({
     where: { id: menuIds.sys },
@@ -86,6 +87,7 @@ async function main() {
             { id: menuIds.sys_user, name: '用户管理', path: '/sys/user', icon: 'ant-design:user-outlined' },
             { id: menuIds.sys_menu, name: '菜单管理', path: '/sys/menu', icon: 'ant-design:appstore-add-outlined' },
             { id: menuIds.sys_dict, name: '数据字典', path: '/sys/dict', icon: 'ant-design:book-outlined' },
+            { id: menuIds.sys_log, name: '系统日志', path: '/sys/log', icon: 'ant-design:file-search-outlined' },
           ],
         },
       },

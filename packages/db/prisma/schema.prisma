@@ -197,3 +197,20 @@ model Dict {
     updatedBy String?
     deleted   Boolean  @default(false)
 }
+
+model Log {
+    id      String   @id @default(cuid())
+    time    Int
+    type    String?
+    path    String?
+    input   String?
+    headers String?
+    ok      Boolean?
+    error   String?
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+    createdBy String?
+    updatedBy String?
+    deleted   Boolean  @default(false)
+}

@@ -23,6 +23,7 @@ export default function SysDict() {
       {
         title: '字典名称',
         dataIndex: 'label',
+        search: true,
         formItemProps: {
           rules: [{ required: true }],
         },
@@ -30,7 +31,6 @@ export default function SysDict() {
       {
         title: '字典值',
         dataIndex: 'value',
-        search: false,
         formItemProps: {
           rules: [{ required: true }],
         },
@@ -41,8 +41,8 @@ export default function SysDict() {
       {
         title: '上级',
         dataIndex: 'parentId',
-        search: false,
         valueType: 'treeSelect',
+        search: true,
         fieldProps: {
           fieldNames: { value: 'id' },
         },

@@ -17,6 +17,7 @@ export default function SysUser() {
       {
         title: '姓名',
         dataIndex: 'name',
+        search: true,
         formItemProps: {
           rules: [{ required: true }],
         },
@@ -24,19 +25,16 @@ export default function SysUser() {
       {
         title: '性别',
         dataIndex: 'sex',
-        search: false,
         valueType: 'treeSelect',
         request: () => getDict('sex'),
       },
       {
         title: '邮箱',
         dataIndex: 'email',
-        search: false,
       },
       {
         title: '部门',
         dataIndex: 'deptIds',
-        search: false,
         valueType: 'treeSelect',
         fieldProps: {
           multiple: true,
@@ -50,7 +48,6 @@ export default function SysUser() {
       {
         title: '岗位',
         dataIndex: 'postIds',
-        search: false,
         valueType: 'select',
         fieldProps: {
           mode: 'multiple',
@@ -64,7 +61,6 @@ export default function SysUser() {
       {
         title: '角色',
         dataIndex: 'roleIds',
-        search: false,
         valueType: 'select',
         fieldProps: {
           mode: 'multiple',

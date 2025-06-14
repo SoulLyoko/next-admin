@@ -61,9 +61,27 @@ export const userRouter = createTRPCRouter({
     }),
 
   create: protectedProcedure
-    .input(UserPartialSchema)
+    .input(UserPartialSchema.merge(z.object({
+      deptIds: z.string().array(),
+      postIds: z.string().array(),
+      roleIds: z.string().array(),
+    }).partial()))
     .mutation(async ({ ctx, input }) => {
-      const data = await ctx.db.user.create({ data: input })
+      const { deptIds, postIds, roleIds, ...createData } = input
+      const data = await ctx.db.user.create({
+        data: {
+          ...createData,
+          depts: {
+            createMany: { data: deptIds?.map(deptId => ({ deptId })) ?? [] },
+          },
+          posts: {
+            createMany: { data: postIds?.map(postId => ({ postId })) ?? [] },
+          },
+          roles: {
+            createMany: { data: roleIds?.map(roleId => ({ roleId })) ?? [] },
+          },
+        },
+      })
       return data
     }),
 
