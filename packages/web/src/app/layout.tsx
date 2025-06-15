@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { Analytics } from '@vercel/analytics/next'
+import { SessionProvider } from 'next-auth/react'
 import { TRPCReactProvider } from '~/trpc/react'
 import '@ant-design/v5-patch-for-react-19'
 import '@unocss/reset/tailwind.css'
@@ -17,9 +18,11 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="en">
       <body>
         <TRPCReactProvider>
-          <AntdRegistry>
-            {children}
-          </AntdRegistry>
+          <SessionProvider>
+            <AntdRegistry>
+              {children}
+            </AntdRegistry>
+          </SessionProvider>
         </TRPCReactProvider>
         <Analytics></Analytics>
       </body>

@@ -1,9 +1,7 @@
-'use client'
-
 export default function LayoutSider({ children }: { children: React.ReactNode }) {
   return (
-    <ALayout.Content className="p-5">
-      <div className="rd-lg h-full bg-white">
+    <ALayout.Content className="p-5 of-auto">
+      <div className="rd-lg bg-white h-full">
         {children}
       </div>
     </ALayout.Content>

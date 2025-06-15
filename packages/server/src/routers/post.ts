@@ -3,7 +3,7 @@ import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { PageSchema } from '../utils'
 
-export const postRouter = createTRPCRouter({
+export default createTRPCRouter({
   page: protectedProcedure
     .input(PageSchema.and(PostPartialSchema))
     .query(async ({ ctx, input }) => {

@@ -77,6 +77,7 @@ async function main() {
     create: {
       id: menuIds.sys,
       name: '系统管理',
+      path: 'sys',
       icon: 'ant-design:appstore-outlined',
       children: {
         createMany: {

@@ -2,7 +2,7 @@ import { LogPartialSchema } from '@app/db/zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { PageSchema } from '../utils'
 
-export const logRouter = createTRPCRouter({
+export default createTRPCRouter({
   page: protectedProcedure
     .input(PageSchema.and(LogPartialSchema))
     .query(async ({ ctx, input }) => {

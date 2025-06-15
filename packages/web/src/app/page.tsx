@@ -1,5 +1,9 @@
-import { redirect } from 'next/navigation'
-
 export default function Home() {
-  redirect('/sys')
+  return (
+    <LayoutDefault>
+      <div className="text-xl font-bold flex-center h-full">
+        Welcome
+      </div>
+    </LayoutDefault>
+  )
 }

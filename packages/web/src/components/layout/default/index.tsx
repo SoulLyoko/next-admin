@@ -1,11 +1,19 @@
 'use client'
 import type { ThemeConfig } from 'antd'
+import { useSession } from 'next-auth/react'
+import { useRouter } from 'next/navigation'
 import LayoutContent from './content'
 import LayoutFooter from './footer'
 import LayoutHeader from './header'
 import LayoutSider from './sider'
 
 export default function LayoutDefault({ children }: { children: React.ReactNode }) {
+  const session = useSession()
+  const router = useRouter()
+
+  if (!session)
+    router.replace('/login')
+
   const theme: ThemeConfig = {
     components: {
       Layout: {

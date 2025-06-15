@@ -1,9 +1,9 @@
 import { MenuPartialSchema } from '@app/db/zod'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
-import { getTreeInclude } from '../utils'
+import { buildTree, getTreeInclude } from '../utils'
 
-export const menuRouter = createTRPCRouter({
+export default createTRPCRouter({
   tree: protectedProcedure
     .input(MenuPartialSchema)
     .query(async ({ ctx, input }) => {
@@ -13,6 +13,30 @@ export const menuRouter = createTRPCRouter({
         where: name ? { name } : { parentId: null },
       })
       return data
+    }),
+
+  routes: protectedProcedure
+    .query(async ({ ctx }) => {
+      const user = ctx.session.user
+      if (user.name === 'admin') {
+        const menus = await ctx.db.menu.findMany({ })
+        return buildTree(menus)
+      }
+
+      const roles = await ctx.db.rolesOnUsers.findMany({
+        where: { userId: user.id },
+        select: { roleId: true },
+      })
+      const menus = await ctx.db.menu.findMany({
+        where: {
+          roles: {
+            some: {
+              OR: roles,
+            },
+          },
+        },
+      })
+      return buildTree(menus)
     }),
 
   create: protectedProcedure

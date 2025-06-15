@@ -23,6 +23,7 @@
     "antd": "catalog:",
     "lodash-es": "catalog:",
     "next": "catalog:",
+    "next-auth": "catalog:",
     "react": "catalog:",
     "react-dom": "catalog:",
     "superjson": "catalog:",

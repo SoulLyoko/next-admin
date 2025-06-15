@@ -2,7 +2,7 @@ import { DeptPartialSchema } from '@app/db/zod'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 
-export const deptRouter = createTRPCRouter({
+export default createTRPCRouter({
   tree: protectedProcedure
     .input(DeptPartialSchema)
     .query(async ({ ctx, input }) => {

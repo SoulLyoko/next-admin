@@ -3,7 +3,7 @@ import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
 import { getTreeInclude } from '../utils'
 
-export const dictRouter = createTRPCRouter({
+export default createTRPCRouter({
   data: protectedProcedure
     .input(z.string().optional())
     .query(async ({ ctx, input }) => {

@@ -1,42 +1,55 @@
-'use client'
 import type { ItemType } from 'antd/es/menu/interface'
 import type { RouterOutputs } from '~/trpc/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { api } from '~/trpc/react'
 
 type MenuItem = ItemType & { children?: ItemType[] }
-type MenuVO = RouterOutputs['menu']['tree'][number]
+type MenuVO = RouterOutputs['menu']['routes'][number]
 
 export default function LayoutSider() {
-  const { data } = api.menu.tree.useQuery({})
+  const { data } = api.menu.routes.useQuery()
   const [collapsed, setCollapsed] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
+
+  const [openKeys, setOpenKeys] = useState<string[]>()
+  useEffect(() => {
+    const find = data?.find(d => d.children?.some(e => e.path === pathname))
+    find?.path && setOpenKeys([find?.path])
+  }, [data])
 
   function getItems(items?: MenuVO[]) {
     return items?.map((item) => {
       const menuItem: MenuItem = {
         label: item.name,
-        key: item.path ?? 'sys',
+        key: item.path!,
         icon: item.icon && <Icon icon={item.icon} />,
-        onClick: () => {
-          item.path && router.push(item.path)
-        },
       }
-      if (item.children.length) {
-        menuItem.children = getItems(item.children as MenuVO[]) ?? []
+      if (item.children?.length) {
+        menuItem.children = getItems(item.children) ?? []
       }
       return menuItem
     })
   }
 
+  function onSelect(item: any) {
+    item.key?.startsWith('/') && router.push(item.key)
+  }
+
   return (
-    <ALayout.Sider className="b-solid b-light b-r" theme="light" width="300px" collapsible onCollapse={setCollapsed}>
-      <div className="flex-center gap-2 h-60px">
+    <ALayout.Sider className="b-r b-light b-solid" theme="light" width="300px" collapsible onCollapse={setCollapsed}>
+      <div className="flex-center gap-2 h-60px cursor-pointer" onClick={() => router.push('/')}>
         <img className="size-7" src="/favicon.ico" />
-        {!collapsed && <span className="font-bold text-lg c-gray">Admin</span>}
+        {!collapsed && <span className="text-lg c-gray font-bold">Admin</span>}
       </div>
-      <AMenu items={getItems(data)} mode="inline" defaultSelectedKeys={[pathname]} defaultOpenKeys={['sys']} />
+      <AMenu
+        className="flex-1 of-auto"
+        items={getItems(data)}
+        mode="inline"
+        selectedKeys={[pathname]}
+        openKeys={openKeys}
+        onSelect={onSelect}
+      />
     </ALayout.Sider>
   )
 }
