@@ -5,6 +5,9 @@ export default antfu(
   {
     unocss: true,
     formatters: true,
+    rules: {
+      'ts/ban-ts-comment': 'off',
+    },
   },
   oxlint.configs['flat/recommended'],
 )

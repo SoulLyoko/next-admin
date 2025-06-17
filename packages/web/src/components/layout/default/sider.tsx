@@ -14,8 +14,10 @@ export default function LayoutSider() {
 
   const [openKeys, setOpenKeys] = useState<string[]>()
   useEffect(() => {
-    const find = data?.find(d => d.children?.some(e => e.path === pathname))
-    find?.path && setOpenKeys([find?.path])
+    if (data?.length) {
+      const find = data?.find(d => d.children?.some(e => e.path === pathname))
+      setOpenKeys(find?.path ? [find.path] : [])
+    }
   }, [data])
 
   function getItems(items?: MenuVO[]) {
@@ -42,14 +44,16 @@ export default function LayoutSider() {
         <img className="size-7" src="/favicon.ico" />
         {!collapsed && <span className="text-lg c-gray font-bold">Admin</span>}
       </div>
-      <AMenu
-        className="flex-1 of-auto"
-        items={getItems(data)}
-        mode="inline"
-        selectedKeys={[pathname]}
-        openKeys={openKeys}
-        onSelect={onSelect}
-      />
+      {openKeys && (
+        <AMenu
+          className="flex-1 of-auto"
+          items={getItems(data)}
+          mode="inline"
+          defaultSelectedKeys={[pathname]}
+          defaultOpenKeys={openKeys}
+          onSelect={onSelect}
+        />
+      )}
     </ALayout.Sider>
   )
 }

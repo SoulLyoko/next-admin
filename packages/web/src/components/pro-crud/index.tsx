@@ -119,7 +119,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
     reload()
   }
 
-  useImperativeHandle(propsCrudRef, () => ({ formType, onAdd, onEdit, onView, onRemove, onBatchRemove }), [])
+  useImperativeHandle(propsCrudRef, () => ({ formType, onAdd, onEdit, onView, onRemove, onBatchRemove }), [formType])
 
   const columns = [
     ...restProps.columns?.map(e => ({ search: false, ...e })) ?? [],

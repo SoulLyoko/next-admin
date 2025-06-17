@@ -14,6 +14,7 @@ export default function Login() {
       title="Admin"
       subTitle="用户登录"
       backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
+      containerStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
       onFinish={onSubmit}
       actions={(
         <div className="flex-center flex-col">

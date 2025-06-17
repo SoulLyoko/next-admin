@@ -1,4 +1,5 @@
-import type { DefaultSession, NextAuthConfig, User } from 'next-auth'
+import type { UserPartial } from '@app/db/zod'
+import type { DefaultSession, NextAuthConfig } from 'next-auth'
 import type { JWT } from 'next-auth/jwt'
 import { randomUUID } from 'node:crypto'
 import { env } from 'node:process'
@@ -17,21 +18,13 @@ import Credentials from './credentials'
  */
 declare module 'next-auth' {
   interface Session extends DefaultSession {
-    user: {
-      id: string
-      // ...other properties
-      // role: UserRole;
-    } & DefaultSession['user']
+    user: User
   }
-
-  interface User {
-    // ...other properties
-    // role: UserRole;
-    sessionToken?: string
-  }
+  interface User extends UserPartial {}
 }
 
-export const expires = new Date(Date.now() + 30 * 24 * 60 * 60 * 1000) // 30 days
+const sessionMaxAge = 24 * 60 * 60 * 1000 // 1 day
+const getExpires = () => new Date(Date.now() + sessionMaxAge)
 
 /**
  * Options for NextAuth.js used to configure adapters, providers, callbacks, etc.
@@ -57,37 +50,45 @@ export const authConfig = {
      */
   ],
   adapter: PrismaAdapter(db),
-  callbacks: {
-    session({ session, token }) {
-      if (token) {
-        session.user.id = token.id as string
-      }
-      return session
-    },
-    jwt({ token, user }) {
-      if (user) {
-        token.id = token.sub
-        token.sessionToken = user.sessionToken
-      }
-      return token
-    },
+  debug: env.NODE_ENV === 'development',
+  pages: {
+    signIn: '/login',
   },
   session: {
     strategy: 'jwt',
+    maxAge: sessionMaxAge,
+  },
+  callbacks: {
+    async jwt(params) {
+      const { token, user, trigger } = params
+      if (user) {
+        token.user = user
+      }
+      if (token.sessionToken) {
+        const exists = await db.session.findFirst({ where: { sessionToken: token.sessionToken, expires: { gt: new Date() } } })
+        if (!exists)
+          return null
+      }
+      else if (trigger) {
+        const sessionToken = randomUUID()
+        await db.session.create({ data: { userId: user.id!, expires: getExpires(), sessionToken } })
+        token.sessionToken = sessionToken
+      }
+      return token
+    },
+    async session(params) {
+      const { session, token } = params
+      if (token.user) {
+        session.user = token.user as any
+      }
+      return session
+    },
   },
   events: {
-    async signIn(message) {
-      const { user } = message
-      const sessionToken = randomUUID()
-      user.sessionToken = sessionToken
-      await db.session.create({
-        data: { userId: user.id!, expires, sessionToken },
-      })
-    },
     async signOut(message) {
-      const { token } = message as { token: JWT & User }
-      if (token?.sessionToken) {
-        await db.session.delete({ where: { sessionToken: token.sessionToken } })
+      const { token: { sessionToken } } = message as { token: JWT & { sessionToken?: string } }
+      if (sessionToken) {
+        await db.session.delete({ where: { sessionToken } })
       }
     },
   },

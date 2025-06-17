@@ -19,7 +19,7 @@ export default createTRPCRouter({
     .query(async ({ ctx }) => {
       const user = ctx.session.user
       if (user.name === 'admin') {
-        const menus = await ctx.db.menu.findMany({ })
+        const menus = await ctx.db.menu.findMany({})
         return buildTree(menus)
       }
 

@@ -6,12 +6,13 @@
   "packageManager": "pnpm@9.15.9",
   "scripts": {
     "build": "pnpm db:generate && pnpm db:deploy && pnpm -F web build",
+    "catalog": "pnpx codemod pnpm/catalog && pnpm i",
     "dev": "pnpm db:dev && pnpm db:seed && pnpm -F web dev",
-    "start": "pnpm -F web start",
     "db:generate": "pnpm -F db db:generate",
     "db:dev": "pnpm -F db db:dev",
     "db:deploy": "pnpm -F db db:deploy",
     "db:push": "pnpm -F db db:push",
+    "db:pull": "pnpm -F db db:pull",
     "db:reset": "pnpm -F db db:reset",
     "db:seed": "pnpm -F db db:seed",
     "db:studio": "pnpm -F db db:studio",
@@ -19,6 +20,7 @@
     "lint": "oxlint && eslint",
     "lint:fix": "oxlint --fix && eslint --fix",
     "preview": "pnpm build && pnpm start",
+    "start": "pnpm -F web start",
     "typecheck": "tsc --noEmit",
     "upd": "taze major -r -l -I"
   },
@@ -36,6 +38,7 @@
     "oxlint": "catalog:",
     "simple-git-hooks": "catalog:",
     "taze": "catalog:",
+    "tsx": "catalog:",
     "typescript": "catalog:"
   },
   "simple-git-hooks": {

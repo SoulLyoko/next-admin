@@ -44,6 +44,7 @@ catalog:
   simple-git-hooks: ^2.13.0
   superjson: ^2.2.2
   taze: ^19.1.0
+  tsx: ^4.20.3
   typescript: ^5.8.3
   unocss: ^66.2.0
   unplugin-auto-import: ^19.3.0

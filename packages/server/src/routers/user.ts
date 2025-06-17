@@ -2,21 +2,16 @@ import type { UserPartial } from '@app/db/zod'
 import { UserPartialSchema } from '@app/db/zod'
 import { z } from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
-import { PageSchema } from '../utils'
+import { hashPassword, PageSchema } from '../utils'
 
 const userWhere = (input?: UserPartial) => ({ ...input, name: { contains: input?.name ?? '' } })
 
 export default createTRPCRouter({
-
-  getInfo: protectedProcedure
-    .query(async ({ ctx }) => {
-      return ctx.session.user
-    }),
-
   page: protectedProcedure
     .input(UserPartialSchema.merge(PageSchema))
     .query(async ({ ctx, input }) => {
       const res = await ctx.db.user.pagination({
+        omit: { password: true },
         include: {
           posts: { include: { post: true } },
           roles: { include: { role: true } },
@@ -38,21 +33,24 @@ export default createTRPCRouter({
   list: protectedProcedure
     .input(UserPartialSchema)
     .query(async ({ ctx, input }) => {
-      const data = await ctx.db.user.findMany({ where: userWhere(input) })
+      const data = await ctx.db.user.findMany({ omit: { password: true }, where: userWhere(input) })
       return data
     }),
 
   create: protectedProcedure
     .input(UserPartialSchema.merge(z.object({
-      deptIds: z.string().array(),
-      postIds: z.string().array(),
-      roleIds: z.string().array(),
-    }).partial()))
+      deptIds: z.string().array().optional(),
+      postIds: z.string().array().optional(),
+      roleIds: z.string().array().optional(),
+      name: z.string(),
+      password: z.string(),
+    })))
     .mutation(async ({ ctx, input }) => {
-      const { deptIds, postIds, roleIds, ...createData } = input
+      const { deptIds, postIds, roleIds, password, ...createData } = input
       const data = await ctx.db.user.create({
         data: {
           ...createData,
+          password: hashPassword(password!),
           depts: {
             createMany: { data: deptIds?.map(deptId => ({ deptId })) ?? [] },
           },
@@ -68,7 +66,7 @@ export default createTRPCRouter({
     }),
 
   update: protectedProcedure
-    .input(UserPartialSchema.merge(z.object({
+    .input(UserPartialSchema.omit({ password: true }).merge(z.object({
       deptIds: z.string().array(),
       postIds: z.string().array(),
       roleIds: z.string().array(),

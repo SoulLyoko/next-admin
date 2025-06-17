@@ -6,6 +6,7 @@ import log from './log'
 import menu from './menu'
 import post from './post'
 import role from './role'
+import session from './session'
 import user from './user'
 
 /**
@@ -21,6 +22,7 @@ export const appRouter = createTRPCRouter({
   menu,
   post,
   role,
+  session,
   user,
 })
 

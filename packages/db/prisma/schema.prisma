@@ -50,6 +50,9 @@ model Session {
     userId       String
     expires      DateTime
     user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
 }
 
 model VerificationToken {
@@ -60,11 +63,33 @@ model VerificationToken {
     @@unique([identifier, token])
 }
 
+/// 用户
 model User {
-    id       String  @id @default(cuid())
-    name     String?
-    email    String?
-    password String?
+    id            String    @id @default(cuid())
+    /// 生日
+    birthday      DateTime?
+    /// 邮箱
+    email         String?   @unique
+    /// 邮箱验证时间
+    emailVerified DateTime?
+    /// 头像
+    image         String?
+    /// 用户名
+    name          String?
+    /// 姓名
+    nickname      String?
+    /// 密码
+    password      String?
+    /// 手机号
+    phone         String?
+    /// 备注
+    remark        String?
+    /// 性别
+    sex           String?
+    /// 排序
+    sort          Int?
+    /// 状态
+    status        String?
 
     accounts Account[]
     sessions Session[]
@@ -79,9 +104,15 @@ model User {
     deleted   Boolean  @default(false)
 }
 
+/// 岗位
 model Post {
-    id   String  @id @default(cuid())
-    name String?
+    id     String  @id @default(cuid())
+    /// 岗位名称
+    name   String?
+    /// 备注
+    remark String?
+    /// 排序
+    sort   Int?
 
     users PostsOnUsers[]
 
@@ -103,9 +134,17 @@ model PostsOnUsers {
     @@id([postId, userId])
 }
 
+/// 角色
 model Role {
-    id   String  @id @default(cuid())
-    name String?
+    id     String  @id @default(cuid())
+    /// 角色标识
+    key    String? @unique
+    /// 角色名称
+    name   String?
+    /// 备注
+    remark String?
+    /// 排序
+    sort   Int?
 
     users RolesOnUsers[]
     menus MenusOnRoles[]
@@ -128,9 +167,15 @@ model RolesOnUsers {
     @@id([roleId, userId])
 }
 
+/// 部门
 model Dept {
-    id   String  @id @default(cuid())
-    name String?
+    id     String  @id @default(cuid())
+    /// 部门名称
+    name   String?
+    /// 备注
+    remark String?
+    /// 排序
+    sort   Int?
 
     parentId String?
     parent   Dept?   @relation("DeptTree", fields: [parentId], references: [id])
@@ -154,11 +199,21 @@ model DeptsOnUsers {
     @@id([deptId, userId])
 }
 
+/// 菜单
 model Menu {
-    id   String  @id @default(cuid())
-    icon String?
-    name String?
-    path String?
+    id     String  @id @default(cuid())
+    /// 图标
+    icon   String?
+    /// 菜单名称
+    name   String?
+    /// 路由路径
+    path   String?
+    /// 备注
+    remark String?
+    /// 排序
+    sort   Int?
+    /// 状态
+    status String?
 
     parentId String?
     parent   Menu?   @relation("MenuTree", fields: [parentId], references: [id])
@@ -182,10 +237,19 @@ model MenusOnRoles {
     @@id([menuId, roleId])
 }
 
+/// 字典
 model Dict {
-    id    String  @id @default(cuid())
-    label String?
-    value String
+    id     String  @id @default(cuid())
+    /// 字典名
+    label  String?
+    /// 备注
+    remark String?
+    /// 排序
+    sort   Int?
+    /// 状态
+    status String?
+    /// 字典值
+    value  String
 
     parentId String?
     parent   Dict?   @relation("DictTree", fields: [parentId], references: [id])
@@ -198,14 +262,22 @@ model Dict {
     deleted   Boolean  @default(false)
 }
 
+/// 日志
 model Log {
     id      String   @id @default(cuid())
-    time    Int
+    /// 耗时
+    time    Int?
+    /// 类型
     type    String?
+    /// 请求路径
     path    String?
+    /// 请求参数
     input   String?
+    /// 请求头
     headers String?
+    /// 是否成功
     ok      Boolean?
+    /// 错误信息
     error   String?
 
     createdAt DateTime @default(now())
