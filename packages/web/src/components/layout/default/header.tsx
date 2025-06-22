@@ -1,18 +1,26 @@
 import type { MenuProps } from 'antd'
-import { signOut, useSession } from 'next-auth/react'
+import { signOut } from 'next-auth/react'
+import { api } from '~/trpc/react'
 
 export default function LayoutHeader() {
-  const session = useSession()
-  const user = session.data?.user
+  const { data: user } = api.user.info.useQuery()
 
   const dropdownItems: MenuProps['items'] = [
     {
-      key: '0',
-      icon: <Icon icon="ant-design:user-outlined" />,
+      key: 'user',
+      icon: <AAvatar src={user?.image}></AAvatar>,
       label: user?.nickname ?? user?.name ?? '未知用户',
     },
     {
-      key: '1',
+      type: 'divider',
+    },
+    {
+      key: 'profile',
+      icon: <Icon icon="ant-design:user-outlined" />,
+      label: <a href="/sys/profile">个人中心</a>,
+    },
+    {
+      key: 'signout',
       icon: <Icon icon="ant-design:logout-outlined" />,
       label: <a onClick={() => signOut({ redirectTo: '/login' })}>退出登录</a>,
     },

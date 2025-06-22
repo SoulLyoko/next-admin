@@ -1,5 +1,6 @@
 import type { ImportNameAlias, ImportsMap } from 'unplugin-auto-import/types'
 import * as antdPro from '@ant-design/pro-components'
+import * as reactUse from '@reactuses/core'
 import * as antd from 'antd'
 import fg from 'fast-glob'
 import { camelCase, upperFirst } from 'lodash-es'
@@ -9,7 +10,7 @@ import AutoImport from 'unplugin-auto-import/webpack'
 export default function AutoImportCustom() {
   return AutoImport({
     include: [/\.[tj]sx?$/],
-    imports: ['react', componentsImports(), lodashImports(), antdImports(), antdProImports()],
+    imports: ['react', componentsImports(), lodashImports(), antdImports(), antdProImports(), reactUseImports()],
     dirs: ['src/hooks', 'src/utils'],
     dts: './auto-imports.d.ts',
   })
@@ -65,6 +66,12 @@ function antdProImports(): ImportsMap {
 
   return {
     '@ant-design/pro-components': [...pros, ...alias],
+  }
+}
+
+function reactUseImports(): ImportsMap {
+  return {
+    '@reactuses/core': Object.keys(reactUse).filter(name => name.startsWith('use') && name !== 'use'),
   }
 }
 

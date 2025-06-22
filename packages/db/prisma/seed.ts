@@ -33,8 +33,8 @@ class InitialData {
     this.dept.push({ parentId: this.dept[1]!.id, id: 'cmboex0qh00003j6q398113nf', name: 't2' })
 
     this.post = []
-    this.post.push({ id: 'cmbmfixog00003p6k2alo7z2r', name: 'manager' })
-    this.post.push({ id: 'cmbn94iux00003p6pcgwep50x', name: 'developer' })
+    this.post.push({ id: 'cmbmfixog00003p6k2alo7z2r', name: '主管' })
+    this.post.push({ id: 'cmbn94iux00003p6pcgwep50x', name: '员工' })
 
     this.role = []
     this.role.push({ id: 'cmbmfkv7s00013p6ktaw8ps06', name: '管理员', key: 'admin' })

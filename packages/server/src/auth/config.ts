@@ -1,4 +1,3 @@
-import type { UserPartial } from '@app/db/zod'
 import type { DefaultSession, NextAuthConfig } from 'next-auth'
 import type { JWT } from 'next-auth/jwt'
 import { randomUUID } from 'node:crypto'
@@ -20,7 +19,7 @@ declare module 'next-auth' {
   interface Session extends DefaultSession {
     user: User
   }
-  interface User extends UserPartial {}
+  interface User {}
 }
 
 const sessionMaxAge = 24 * 60 * 60 * 1000 // 1 day
@@ -61,9 +60,7 @@ export const authConfig = {
   callbacks: {
     async jwt(params) {
       const { token, user, trigger } = params
-      if (user) {
-        token.user = user
-      }
+      token.picture = '' // base64 to large
       if (token.sessionToken) {
         const exists = await db.session.findFirst({ where: { sessionToken: token.sessionToken, expires: { gt: new Date() } } })
         if (!exists)
@@ -78,8 +75,8 @@ export const authConfig = {
     },
     async session(params) {
       const { session, token } = params
-      if (token.user) {
-        session.user = token.user as any
+      if (token.sub) {
+        session.user.id = token.sub
       }
       return session
     },

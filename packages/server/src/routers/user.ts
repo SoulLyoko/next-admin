@@ -7,6 +7,51 @@ import { hashPassword, PageSchema } from '../utils'
 const userWhere = (input?: UserPartial) => ({ ...input, name: { contains: input?.name ?? '' } })
 
 export default createTRPCRouter({
+  info: protectedProcedure.query(async ({ ctx }) => {
+    const id = ctx.session.user.id
+    const data = await ctx.db.user.findUnique({
+      include: {
+        posts: { include: { post: true } },
+        roles: { include: { role: true } },
+        depts: { include: { dept: true } },
+      },
+      where: { id },
+    })
+    return data
+  }),
+
+  updateInfo: protectedProcedure
+    .input(UserPartialSchema.omit({ password: true }))
+    .mutation(async ({ ctx, input }) => {
+      const id = ctx.session.user.id
+      const data = await ctx.db.user.update({
+        where: { id },
+        data: input,
+      })
+      return data
+    }),
+
+  updatePassword: protectedProcedure
+    .input(z.object({
+      oldPassword: z.string(),
+      newPassword: z.string(),
+    }))
+    .mutation(async ({ ctx, input }) => {
+      const id = ctx.session.user.id
+      const { oldPassword, newPassword } = input
+      const user = await ctx.db.user.findUnique({
+        where: { id, password: hashPassword(oldPassword!) },
+      })
+      if (!user) {
+        throw new Error('Wrong password')
+      }
+      const data = await ctx.db.user.update({
+        where: { id },
+        data: { password: hashPassword(newPassword) },
+      })
+      return data
+    }),
+
   page: protectedProcedure
     .input(UserPartialSchema.merge(PageSchema))
     .query(async ({ ctx, input }) => {
