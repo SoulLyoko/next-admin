@@ -1,15 +1,18 @@
 'use client'
-import { api, type RouterOutputs } from '~/trpc/react'
+import type { RouterOutputs } from '~/trpc/client'
+import { client } from '~/trpc/client'
 
 type Role = Partial<RouterOutputs['role']['page']['data'][number]>
 
 export default function SysRole() {
+  const queryDict = client.dict.data.query
+
   const crudProps = defineProCrudProps<Role>({
     rowKey: 'id',
-    request: api.useUtils().role.page.fetch,
-    create: api.role.create.useMutation().mutateAsync,
-    update: api.role.update.useMutation().mutateAsync,
-    delete: api.role.delete.useMutation().mutateAsync,
+    request: client.role.page.query,
+    create: client.role.create.mutate,
+    update: client.role.update.mutate,
+    delete: client.role.delete.mutate,
     columns: [
       {
         title: '名称',
@@ -28,9 +31,22 @@ export default function SysRole() {
           fieldNames: { label: 'name', value: 'id' },
         },
         ellipsis: true,
-        request: api.useUtils().menu.tree.fetch,
+        request: client.menu.tree.query,
         render(dom, row) {
           return row.menus?.map(e => e.menu?.name)?.join(' | ')
+        },
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        valueType: 'radio',
+        request: () => queryDict('sys_status'),
+        render(_, row, index, action) {
+          async function onUpdate(data: Role) {
+            await client.user.updateStatus.mutate(data)
+            await action?.reload()
+          }
+          return <StatusSwitcher data={row} onUpdate={onUpdate} />
         },
       },
     ],

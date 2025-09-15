@@ -1,0 +1,29 @@
+.icon-select-list {
+  --icon-size: 48px;
+}
+
+/* unset option bgc */
+.icon-select-list .ant-select-item-option-active {
+  background-color: unset !important;
+}
+
+.icon-select-list .iconify {
+  padding: 5px;
+  width: var(--icon-size);
+  height: var(--icon-size);
+  border-radius: var(--ant-border-radius-sm);
+  cursor: pointer;
+}
+
+.icon-select-list .iconify.iconify-selected {
+  background-color: var(--ant-select-option-selected-bg);
+}
+
+.icon-select-list .iconify:hover {
+  background-color: var(--ant-select-option-active-bg);
+}
+
+.icon-select-list .icon-select-row {
+  display: flex;
+  height: var(--icon-size);
+}

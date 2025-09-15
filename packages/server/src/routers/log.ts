@@ -6,7 +6,10 @@ export default createTRPCRouter({
   page: protectedProcedure
     .input(PageSchema.and(LogPartialSchema))
     .query(async ({ ctx, input }) => {
-      const res = await ctx.db.log.pagination({ where: input })
+      const res = await ctx.db.log.pagination({
+        where: input,
+        orderBy: { createdAt: 'desc' },
+      })
       return res
     }),
 })

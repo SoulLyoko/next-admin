@@ -1,36 +1,39 @@
 'use client'
 import type { UploadProps } from 'antd'
 import type { CrudInstance } from '~/components/pro-crud'
-import type { RouterOutputs } from '~/trpc/react'
-import { api } from '~/trpc/react'
+import type { RouterOutputs } from '~/trpc/client'
+import { client } from '~/trpc/client'
 
 type User = Partial<RouterOutputs['user']['page']['data'][number]>
 
 export default function SysUser() {
-  const getDict = api.useUtils().dict.data.fetch
+  const queryDict = client.dict.data.query
 
   const crudRef = useRef<CrudInstance>(undefined)
   const crudProps = defineProCrudProps<User>({
     crudRef,
     rowKey: 'id',
-    request: api.useUtils().user.page.fetch,
-    create: api.user.create.useMutation().mutateAsync,
-    update: api.user.update.useMutation().mutateAsync,
-    delete: api.user.delete.useMutation().mutateAsync,
+    request: client.user.page.query,
+    create: client.user.create.mutate,
+    update: client.user.update.mutate,
+    delete: client.user.delete.mutate,
     columns: [
       {
         title: '头像',
         dataIndex: 'image',
         valueType: 'image',
+        fieldProps: {
+          className: 'rd-full',
+        },
         renderFormItem(schema, config, form) {
           const image = form.getFieldValue('image')
-          const handleChange: UploadProps['onChange'] = async (info) => {
+          const onChange: UploadProps['onChange'] = async (info) => {
             const url = await getFileBase64(info.file.originFileObj!)
             form.setFieldValue('image', url)
           }
           return (
-            <AUpload listType="picture-circle" showUploadList={false} onChange={handleChange}>
-              {image ? <img src={image} alt="avatar" /> : <Icon icon="ant-design:plus-outlined" />}
+            <AUpload listType="picture-circle" showUploadList={false} onChange={onChange}>
+              {image ? <img src={image} alt="avatar" className="rd-full" /> : <Icon icon="ant-design:plus-outlined" />}
             </AUpload>
           )
         },
@@ -44,23 +47,23 @@ export default function SysUser() {
         title: '用户名',
         dataIndex: 'name',
         valueType: 'dependency',
-        search: true,
         name: [],
+        search: true,
         columns() {
           const formType = crudRef.current?.formType
           return [{
             title: '用户名',
             dataIndex: 'name',
-            formItemProps: { rules: [{ required: true }] },
-            fieldProps: { disabled: formType !== 'add' },
+            formItemProps: { rules: [{ required: formType === 'add' }] },
+            fieldProps: { disabled: formType === 'edit' },
           }]
         },
       },
       {
         title: '密码',
         dataIndex: 'password',
-        valueType: 'dependency',
         hideInTable: true,
+        valueType: 'dependency',
         name: [],
         columns() {
           const formType = crudRef.current?.formType
@@ -77,7 +80,7 @@ export default function SysUser() {
         title: '性别',
         dataIndex: 'sex',
         valueType: 'select',
-        request: () => getDict('sex'),
+        request: () => queryDict('sys_user_sex'),
       },
       {
         title: '手机号',
@@ -95,7 +98,7 @@ export default function SysUser() {
           multiple: true,
           fieldNames: { label: 'name', value: 'id' },
         },
-        request: api.useUtils().dept.tree.fetch,
+        request: client.dept.treeSelect.query,
       },
       {
         title: '岗位',
@@ -105,7 +108,7 @@ export default function SysUser() {
           mode: 'multiple',
           fieldNames: { label: 'name', value: 'id' },
         },
-        request: api.useUtils().post.list.fetch,
+        request: client.post.list.query,
       },
       {
         title: '角色',
@@ -115,7 +118,20 @@ export default function SysUser() {
           mode: 'multiple',
           fieldNames: { label: 'name', value: 'id' },
         },
-        request: api.useUtils().role.list.fetch,
+        request: client.role.list.query,
+      },
+      {
+        title: '状态',
+        dataIndex: 'status',
+        valueType: 'radio',
+        request: () => queryDict('sys_status'),
+        render(_, row, index, action) {
+          async function onUpdate(data: User) {
+            await client.user.updateStatus.mutate(data)
+            await action?.reload()
+          }
+          return <StatusSwitcher data={row} onUpdate={onUpdate} />
+        },
       },
     ],
   })

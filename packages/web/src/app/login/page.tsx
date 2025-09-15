@@ -2,9 +2,7 @@
 import { signIn } from 'next-auth/react'
 
 export default function Login() {
-  async function onSubmit(typeOrForm?: string | any) {
-    const type = typeof typeOrForm === 'string' ? typeOrForm : 'credentials'
-    const form = typeof typeOrForm === 'object' ? typeOrForm : undefined
+  function onSubmit(type: string | any, form?: any) {
     return signIn(type, { ...form, redirectTo: '/' })
   }
 
@@ -15,7 +13,7 @@ export default function Login() {
       subTitle="用户登录"
       backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
       containerStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}
-      onFinish={onSubmit}
+      onFinish={form => onSubmit('credentials', form)}
       actions={(
         <div className="flex-center flex-col">
           <ADivider>其他登录方式</ADivider>

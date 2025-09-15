@@ -54,8 +54,14 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
   const reload = () => actionRef.current?.reload()
 
   const [formState, setFormState] = useState<SchemaFormProps<T, V>>({ columns: [] })
-  const [open, setOpen] = useState(false)
   const [formType, setFormType] = useState<FormType>()
+  const [open, setOpenValue] = useState(false)
+  function setOpen(value: boolean) {
+    if (value === false)
+      setFormType(undefined)
+
+    setTimeout(() => setOpenValue(value))
+  }
 
   function onAdd(row?: T) {
     setFormType('add')
@@ -83,7 +89,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
       initialValues: { ...row },
       onFinish: async (form) => {
         const rowKey = restProps.rowKey as keyof T
-        form = { [rowKey]: row?.[rowKey], ...form }
+        form = { [rowKey]: row[rowKey], ...form }
         if (restProps.onUpdate)
           return restProps.onUpdate(form)
 

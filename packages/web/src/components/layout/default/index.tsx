@@ -15,6 +15,7 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
     router.replace('/login')
 
   const theme: ThemeConfig = {
+    cssVar: true,
     components: {
       Layout: {
         headerBg: 'white',

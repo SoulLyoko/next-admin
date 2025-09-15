@@ -1,10 +1,10 @@
+import type { MenuPartialWithRelations } from '@app/db/zod'
 import type { ItemType } from 'antd/es/menu/interface'
-import type { RouterOutputs } from '~/trpc/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { api } from '~/trpc/react'
 
 type MenuItem = ItemType & { children?: ItemType[] }
-type MenuVO = RouterOutputs['menu']['routes'][number]
+type MenuVO = MenuPartialWithRelations
 
 export default function LayoutSider() {
   const { data } = api.menu.routes.useQuery()
@@ -16,7 +16,7 @@ export default function LayoutSider() {
   useEffect(() => {
     if (data?.length) {
       const find = data?.find(d => d.children?.some(e => e.path === pathname))
-      setOpenKeys(find?.path ? [find.path] : [])
+      find?.path && setOpenKeys([find.path])
     }
   }, [data])
 

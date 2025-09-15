@@ -1,12 +1,12 @@
 'use client'
 import type { SessionPartialWithRelations } from '@app/db/zod'
-import { api } from '~/trpc/react'
+import { client } from '~/trpc/client'
 
 export default function SysSession() {
   const crudProps = defineProCrudProps<SessionPartialWithRelations>({
     rowKey: 'id',
-    request: api.useUtils().session.page.fetch,
-    delete: api.session.delete.useMutation().mutateAsync,
+    request: client.session.page.query,
+    delete: client.session.delete.mutate,
     addBtn: false,
     editBtn: false,
     columns: [

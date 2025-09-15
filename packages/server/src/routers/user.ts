@@ -149,4 +149,15 @@ export default createTRPCRouter({
       const data = await ctx.db.user.deleteMany({ where: { id: inIds } })
       return data
     }),
+
+  updateStatus: protectedProcedure
+    .input(UserPartialSchema.pick({ id: true, status: true }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, status } = input
+      const data = await ctx.db.user.update({
+        where: { id },
+        data: { status },
+      })
+      return data
+    }),
 })

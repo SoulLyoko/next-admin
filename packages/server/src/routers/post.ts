@@ -40,4 +40,15 @@ export default createTRPCRouter({
       const data = await ctx.db.post.deleteMany({ where: { id: inIds } })
       return data
     }),
+
+  updateStatus: protectedProcedure
+    .input(PostPartialSchema.pick({ id: true, status: true }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, status } = input
+      const data = await ctx.db.post.update({
+        where: { id },
+        data: { status },
+      })
+      return data
+    }),
 })

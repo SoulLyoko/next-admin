@@ -1,12 +1,14 @@
 'use client'
-import { message, type UploadProps } from 'antd'
+import type { UploadProps } from 'antd'
+import { message } from 'antd'
+import { client } from '~/trpc/client'
 import { api } from '~/trpc/react'
 
 export default function SysProfile() {
   const { data: user, isFetching, refetch } = api.user.info.useQuery()
   const { mutateAsync: updateInfo } = api.user.updateInfo.useMutation()
   const { mutateAsync: updatePassword } = api.user.updatePassword.useMutation()
-  const getDict = api.useUtils().dict.data.fetch
+  const queryDict = client.dict.data.query
 
   const handleChange: UploadProps['onChange'] = async (info) => {
     const url = await getFileBase64(info.file.originFileObj!)
@@ -17,6 +19,7 @@ export default function SysProfile() {
   const sexIconMap: Record<string, any> = {
     1: <Icon icon="ant-design:man-outlined" />,
     0: <Icon icon="ant-design:woman-outlined" />,
+    unknown: <Icon icon="ant-design:question-circle-outlined" />,
   }
 
   return (
@@ -24,7 +27,7 @@ export default function SysProfile() {
       <ACard className="w-xs" loading={isFetching}>
         <div className="flex-center flex-col">
           <AUpload listType="picture-circle" showUploadList={false} onChange={handleChange}>
-            {user?.image ? <img src={user.image} alt="avatar" /> : <Icon icon="ant-design:plus-outlined" />}
+            {user?.image ? <img src={user.image} alt="avatar" className="rd-full" /> : <Icon icon="ant-design:plus-outlined" />}
           </AUpload>
           <div className="text-lg font-bold mt-2">
             {user?.nickname}
@@ -40,7 +43,7 @@ export default function SysProfile() {
           columns={[
             { title: <Icon icon="ant-design:user-outlined" />, dataIndex: 'name' },
             { title: <Icon icon="ant-design:mail-outlined" />, dataIndex: 'email' },
-            { title: sexIconMap[user?.sex ?? ''], dataIndex: 'sex', valueType: 'select', request: () => getDict('sex') },
+            { title: sexIconMap[user?.sex ?? ''] ?? sexIconMap.unknown, dataIndex: 'sex', valueType: 'select', request: () => queryDict('sex') },
             { title: <Icon icon="ant-design:cluster-outlined" />, dataIndex: 'depts', render: () => user?.depts?.map(e => e.dept.name).join(',') },
             { title: <Icon icon="ant-design:idcard-outlined" />, dataIndex: 'posts', render: () => user?.posts?.map(e => e.post.name).join(',') },
             { title: <Icon icon="ant-design:user-add-outlined" />, dataIndex: 'roles', render: () => user?.roles?.map(e => e.role.name).join(',') },
@@ -60,7 +63,7 @@ export default function SysProfile() {
             columns={[
               { title: '姓名', dataIndex: 'nickname' },
               { title: '邮箱', dataIndex: 'email' },
-              { title: '性别', dataIndex: 'sex', valueType: 'select', request: () => getDict('sex') },
+              { title: '性别', dataIndex: 'sex', valueType: 'select', request: () => queryDict('sex') },
             ]}
           />
         </ACard>

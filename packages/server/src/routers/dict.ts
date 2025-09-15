@@ -1,7 +1,6 @@
 import { DictPartialSchema } from '@app/db/zod'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
-import { getTreeInclude } from '../utils'
 
 export default createTRPCRouter({
   data: protectedProcedure
@@ -9,19 +8,25 @@ export default createTRPCRouter({
     .query(async ({ ctx, input }) => {
       if (!input)
         return []
-      const data = await ctx.db.dict.findFirst({
-        include: getTreeInclude(),
-        where: { value: input, parentId: null },
+      const data = await ctx.db.dict.findTree({
+        include: {
+          children: {
+            where: { status: '1' },
+            orderBy: { sort: 'asc' },
+          },
+        },
+        where: { value: input, status: '1' },
       })
-      return data?.children ?? []
+      return data?.[0]?.children ?? []
     }),
 
   tree: protectedProcedure
     .input(DictPartialSchema)
     .query(async ({ ctx, input }) => {
-      const data = await ctx.db.dict.findMany({
-        include: getTreeInclude(),
-        where: { ...input, parentId: null },
+      const data = await ctx.db.dict.findTree({
+        include: { children: { orderBy: { sort: 'asc' } } },
+        where: input,
+        orderBy: { sort: 'asc' },
       })
       return data
     }),
@@ -45,6 +50,17 @@ export default createTRPCRouter({
     .mutation(async ({ ctx, input }) => {
       const inIds = { in: Array.isArray(input) ? input : [input] }
       const data = await ctx.db.dict.deleteMany({ where: { id: inIds } })
+      return data
+    }),
+
+  updateStatus: protectedProcedure
+    .input(DictPartialSchema.pick({ id: true, status: true }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, status } = input
+      const data = await ctx.db.dict.update({
+        where: { id },
+        data: { status },
+      })
       return data
     }),
 })

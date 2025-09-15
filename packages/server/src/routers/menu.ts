@@ -1,42 +1,51 @@
+import type { Prisma } from '@prisma/client'
 import { MenuPartialSchema } from '@app/db/zod'
+import { defu } from 'defu'
 import z from 'zod'
 import { createTRPCRouter, protectedProcedure } from '../trpc'
-import { buildTree, getTreeInclude } from '../utils'
 
 export default createTRPCRouter({
-  tree: protectedProcedure
-    .input(MenuPartialSchema)
-    .query(async ({ ctx, input }) => {
-      const { name } = input
-      const data = await ctx.db.menu.findMany({
-        include: getTreeInclude(),
-        where: name ? { name } : { parentId: null },
-      })
-      return data
-    }),
-
   routes: protectedProcedure
     .query(async ({ ctx }) => {
       const user = ctx.session.user
+      const commonArgs: Prisma.MenuFindManyArgs = {
+        where: { status: '1' },
+        orderBy: { sort: 'asc' },
+      }
       if (user.name === 'admin') {
-        const menus = await ctx.db.menu.findMany({})
-        return buildTree(menus)
+        const data = await ctx.db.menu.findTree({
+          ...commonArgs,
+          include: { children: commonArgs },
+        })
+        return data
       }
 
       const roles = await ctx.db.rolesOnUsers.findMany({
         where: { userId: user.id },
         select: { roleId: true },
       })
-      const menus = await ctx.db.menu.findMany({
+      const whereRoles = {
         where: {
-          roles: {
-            some: {
-              OR: roles,
-            },
-          },
+          roles: { some: { OR: roles } },
         },
+      }
+      const whereRolesArgs = defu(whereRoles, commonArgs)
+      const data = await ctx.db.menu.findTree({
+        ...whereRolesArgs,
+        include: { children: whereRolesArgs },
       })
-      return buildTree(menus)
+      return data
+    }),
+
+  tree: protectedProcedure
+    .input(MenuPartialSchema)
+    .query(async ({ ctx, input }) => {
+      const data = await ctx.db.menu.findTree({
+        include: { children: { orderBy: { sort: 'asc' } } },
+        where: input,
+        orderBy: { sort: 'asc' },
+      })
+      return data
     }),
 
   create: protectedProcedure
@@ -59,6 +68,17 @@ export default createTRPCRouter({
       const inIds = { in: Array.isArray(input) ? input : [input] }
       await ctx.db.menusOnRoles.deleteMany({ where: { menuId: inIds } })
       const data = await ctx.db.menu.deleteMany({ where: { id: inIds } })
+      return data
+    }),
+
+  updateStatus: protectedProcedure
+    .input(MenuPartialSchema.pick({ id: true, status: true }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, status } = input
+      const data = await ctx.db.menu.update({
+        where: { id },
+        data: { status },
+      })
       return data
     }),
 })

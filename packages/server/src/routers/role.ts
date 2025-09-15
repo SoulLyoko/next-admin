@@ -35,12 +35,14 @@ export default createTRPCRouter({
     })))
     .mutation(async ({ ctx, input }) => {
       const { menuIds, ...createData } = input
-      const data = await ctx.db.role.create({ data: {
-        ...createData,
-        menus: {
-          createMany: { data: menuIds?.map(menuId => ({ menuId })) ?? [] },
+      const data = await ctx.db.role.create({
+        data: {
+          ...createData,
+          menus: {
+            createMany: { data: menuIds?.map(menuId => ({ menuId })) ?? [] },
+          },
         },
-      } })
+      })
       return data
     }),
 
@@ -70,6 +72,17 @@ export default createTRPCRouter({
       await ctx.db.rolesOnUsers.deleteMany({ where: { roleId: inIds } })
       await ctx.db.menusOnRoles.deleteMany({ where: { roleId: inIds } })
       const data = await ctx.db.role.deleteMany({ where: { id: inIds } })
+      return data
+    }),
+
+  updateStatus: protectedProcedure
+    .input(RolePartialSchema.pick({ id: true, status: true }))
+    .mutation(async ({ ctx, input }) => {
+      const { id, status } = input
+      const data = await ctx.db.role.update({
+        where: { id },
+        data: { status },
+      })
       return data
     }),
 })

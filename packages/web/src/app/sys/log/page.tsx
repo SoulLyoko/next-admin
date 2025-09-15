@@ -1,11 +1,11 @@
 'use client'
 import type { LogPartial } from '@app/db/zod'
-import { api } from '~/trpc/react'
+import { client } from '~/trpc/client'
 
 export default function SysLog() {
   const crudProps = defineProCrudProps<LogPartial>({
     rowKey: 'id',
-    request: api.useUtils().log.page.fetch,
+    request: client.log.page.query,
     viewBtn: true,
     editBtn: false,
     delBtn: false,
