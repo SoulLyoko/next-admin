@@ -1,5 +1,5 @@
 -- CreateTable
-CREATE TABLE "Account" (
+CREATE TABLE "public"."Account" (
     "id" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
     "type" TEXT NOT NULL,
@@ -18,7 +18,7 @@ CREATE TABLE "Account" (
 );
 
 -- CreateTable
-CREATE TABLE "Session" (
+CREATE TABLE "public"."Session" (
     "id" TEXT NOT NULL,
     "sessionToken" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
@@ -30,16 +30,15 @@ CREATE TABLE "Session" (
 );
 
 -- CreateTable
-CREATE TABLE "VerificationToken" (
+CREATE TABLE "public"."VerificationToken" (
     "identifier" TEXT NOT NULL,
     "token" TEXT NOT NULL,
     "expires" TIMESTAMP(3) NOT NULL
 );
 
 -- CreateTable
-CREATE TABLE "User" (
+CREATE TABLE "public"."User" (
     "id" TEXT NOT NULL,
-    "birthday" TIMESTAMP(3),
     "email" TEXT,
     "emailVerified" TIMESTAMP(3),
     "image" TEXT,
@@ -50,7 +49,7 @@ CREATE TABLE "User" (
     "remark" TEXT,
     "sex" TEXT,
     "sort" INTEGER,
-    "status" TEXT,
+    "status" TEXT NOT NULL DEFAULT '1',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdBy" TEXT,
@@ -61,11 +60,12 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "Post" (
+CREATE TABLE "public"."Post" (
     "id" TEXT NOT NULL,
     "name" TEXT,
     "remark" TEXT,
     "sort" INTEGER,
+    "status" TEXT NOT NULL DEFAULT '1',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdBy" TEXT,
@@ -76,7 +76,7 @@ CREATE TABLE "Post" (
 );
 
 -- CreateTable
-CREATE TABLE "PostsOnUsers" (
+CREATE TABLE "public"."PostsOnUsers" (
     "postId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
 
@@ -84,12 +84,13 @@ CREATE TABLE "PostsOnUsers" (
 );
 
 -- CreateTable
-CREATE TABLE "Role" (
+CREATE TABLE "public"."Role" (
     "id" TEXT NOT NULL,
     "key" TEXT,
     "name" TEXT,
     "remark" TEXT,
     "sort" INTEGER,
+    "status" TEXT NOT NULL DEFAULT '1',
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
     "createdBy" TEXT,
@@ -100,7 +101,7 @@ CREATE TABLE "Role" (
 );
 
 -- CreateTable
-CREATE TABLE "RolesOnUsers" (
+CREATE TABLE "public"."RolesOnUsers" (
     "roleId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
 
@@ -108,11 +109,12 @@ CREATE TABLE "RolesOnUsers" (
 );
 
 -- CreateTable
-CREATE TABLE "Dept" (
+CREATE TABLE "public"."Dept" (
     "id" TEXT NOT NULL,
     "name" TEXT,
     "remark" TEXT,
     "sort" INTEGER,
+    "status" TEXT NOT NULL DEFAULT '1',
     "parentId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -124,7 +126,7 @@ CREATE TABLE "Dept" (
 );
 
 -- CreateTable
-CREATE TABLE "DeptsOnUsers" (
+CREATE TABLE "public"."DeptsOnUsers" (
     "deptId" TEXT NOT NULL,
     "userId" TEXT NOT NULL,
 
@@ -132,14 +134,14 @@ CREATE TABLE "DeptsOnUsers" (
 );
 
 -- CreateTable
-CREATE TABLE "Menu" (
+CREATE TABLE "public"."Menu" (
     "id" TEXT NOT NULL,
     "icon" TEXT,
     "name" TEXT,
     "path" TEXT,
     "remark" TEXT,
     "sort" INTEGER,
-    "status" TEXT,
+    "status" TEXT NOT NULL DEFAULT '1',
     "parentId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
@@ -151,7 +153,7 @@ CREATE TABLE "Menu" (
 );
 
 -- CreateTable
-CREATE TABLE "MenusOnRoles" (
+CREATE TABLE "public"."MenusOnRoles" (
     "menuId" TEXT NOT NULL,
     "roleId" TEXT NOT NULL,
 
@@ -159,12 +161,12 @@ CREATE TABLE "MenusOnRoles" (
 );
 
 -- CreateTable
-CREATE TABLE "Dict" (
+CREATE TABLE "public"."Dict" (
     "id" TEXT NOT NULL,
     "label" TEXT,
     "remark" TEXT,
     "sort" INTEGER,
-    "status" TEXT,
+    "status" TEXT NOT NULL DEFAULT '1',
     "value" TEXT NOT NULL,
     "parentId" TEXT,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
@@ -177,7 +179,7 @@ CREATE TABLE "Dict" (
 );
 
 -- CreateTable
-CREATE TABLE "Log" (
+CREATE TABLE "public"."Log" (
     "id" TEXT NOT NULL,
     "time" INTEGER,
     "type" TEXT,
@@ -196,64 +198,64 @@ CREATE TABLE "Log" (
 );
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "Account"("provider", "providerAccountId");
+CREATE UNIQUE INDEX "Account_provider_providerAccountId_key" ON "public"."Account"("provider", "providerAccountId");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Session_sessionToken_key" ON "Session"("sessionToken");
+CREATE UNIQUE INDEX "Session_sessionToken_key" ON "public"."Session"("sessionToken");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "VerificationToken_token_key" ON "VerificationToken"("token");
+CREATE UNIQUE INDEX "VerificationToken_token_key" ON "public"."VerificationToken"("token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "VerificationToken"("identifier", "token");
+CREATE UNIQUE INDEX "VerificationToken_identifier_token_key" ON "public"."VerificationToken"("identifier", "token");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
+CREATE UNIQUE INDEX "User_email_key" ON "public"."User"("email");
 
 -- CreateIndex
-CREATE INDEX "Post_name_idx" ON "Post"("name");
+CREATE INDEX "Post_name_idx" ON "public"."Post"("name");
 
 -- CreateIndex
-CREATE UNIQUE INDEX "Role_key_key" ON "Role"("key");
+CREATE UNIQUE INDEX "Role_key_key" ON "public"."Role"("key");
 
 -- CreateIndex
-CREATE INDEX "Role_name_idx" ON "Role"("name");
+CREATE INDEX "Role_name_idx" ON "public"."Role"("name");
 
 -- AddForeignKey
-ALTER TABLE "Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."Account" ADD CONSTRAINT "Account_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
+ALTER TABLE "public"."Session" ADD CONSTRAINT "Session_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PostsOnUsers" ADD CONSTRAINT "PostsOnUsers_postId_fkey" FOREIGN KEY ("postId") REFERENCES "Post"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."PostsOnUsers" ADD CONSTRAINT "PostsOnUsers_postId_fkey" FOREIGN KEY ("postId") REFERENCES "public"."Post"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "PostsOnUsers" ADD CONSTRAINT "PostsOnUsers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."PostsOnUsers" ADD CONSTRAINT "PostsOnUsers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RolesOnUsers" ADD CONSTRAINT "RolesOnUsers_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."RolesOnUsers" ADD CONSTRAINT "RolesOnUsers_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "public"."Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "RolesOnUsers" ADD CONSTRAINT "RolesOnUsers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."RolesOnUsers" ADD CONSTRAINT "RolesOnUsers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Dept" ADD CONSTRAINT "Dept_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Dept"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."Dept" ADD CONSTRAINT "Dept_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "public"."Dept"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DeptsOnUsers" ADD CONSTRAINT "DeptsOnUsers_deptId_fkey" FOREIGN KEY ("deptId") REFERENCES "Dept"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."DeptsOnUsers" ADD CONSTRAINT "DeptsOnUsers_deptId_fkey" FOREIGN KEY ("deptId") REFERENCES "public"."Dept"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "DeptsOnUsers" ADD CONSTRAINT "DeptsOnUsers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."DeptsOnUsers" ADD CONSTRAINT "DeptsOnUsers_userId_fkey" FOREIGN KEY ("userId") REFERENCES "public"."User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Menu" ADD CONSTRAINT "Menu_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Menu"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."Menu" ADD CONSTRAINT "Menu_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "public"."Menu"("id") ON DELETE SET NULL ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MenusOnRoles" ADD CONSTRAINT "MenusOnRoles_menuId_fkey" FOREIGN KEY ("menuId") REFERENCES "Menu"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."MenusOnRoles" ADD CONSTRAINT "MenusOnRoles_menuId_fkey" FOREIGN KEY ("menuId") REFERENCES "public"."Menu"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MenusOnRoles" ADD CONSTRAINT "MenusOnRoles_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "public"."MenusOnRoles" ADD CONSTRAINT "MenusOnRoles_roleId_fkey" FOREIGN KEY ("roleId") REFERENCES "public"."Role"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "Dict" ADD CONSTRAINT "Dict_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "Dict"("id") ON DELETE SET NULL ON UPDATE CASCADE;
+ALTER TABLE "public"."Dict" ADD CONSTRAINT "Dict_parentId_fkey" FOREIGN KEY ("parentId") REFERENCES "public"."Dict"("id") ON DELETE SET NULL ON UPDATE CASCADE;
