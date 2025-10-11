@@ -16,7 +16,7 @@ export default function LayoutSider() {
   useEffect(() => {
     if (data?.length) {
       const find = data?.find(d => d.children?.some(e => e.path === pathname))
-      find?.path && setOpenKeys([find.path])
+      setOpenKeys(find?.path ? [find.path] : [])
     }
   }, [data])
 
