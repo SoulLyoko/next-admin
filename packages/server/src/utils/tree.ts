@@ -1,20 +1,22 @@
+import { defu } from 'defu'
+
 interface TreeInclude {
-  parent?: boolean
+  parent?: boolean | { include?: TreeInclude }
   children?: boolean | { include?: TreeInclude }
 }
 
-export function getTreeInclude(level: number = 10) {
+export function getTreeInclude<T = TreeInclude>(args?: T, level: number = 10) {
   let treeInclude: TreeInclude = {}
   for (let i = 0; i < level; i++) {
     if (i === 0) {
-      treeInclude = { parent: true, children: true }
+      treeInclude = defu(args ?? {}, { parent: true, children: true })
     }
     else {
-      treeInclude = { parent: true, children: { include: treeInclude } }
+      treeInclude = defu(args ?? {}, { parent: true, children: { include: treeInclude } })
     }
   }
 
-  return treeInclude
+  return treeInclude as T
 }
 
 export type TreeNode<T = Record<string, any>> = T & { children?: TreeNode<T>[] }
