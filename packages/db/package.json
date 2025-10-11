@@ -19,8 +19,5 @@
     "prisma": "catalog:",
     "zod": "catalog:",
     "zod-prisma-types": "catalog:"
-  },
-  "prisma": {
-    "seed": "tsx ./prisma/seed.ts"
   }
 }

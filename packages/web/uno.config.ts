@@ -1,4 +1,11 @@
-import { defineConfig, presetAttributify, presetIcons, presetWind4, transformerAttributifyJsx, transformerVariantGroup } from 'unocss'
+import {
+  defineConfig,
+  presetAttributify,
+  presetIcons,
+  presetWind4,
+  transformerAttributifyJsx,
+  transformerVariantGroup,
+} from 'unocss'
 
 export default defineConfig({
   presets: [
