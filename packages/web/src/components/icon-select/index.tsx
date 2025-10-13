@@ -1,15 +1,19 @@
 'use client'
 import type { SelectProps } from 'antd'
 import { icons } from '@iconify-json/ant-design'
+import { Select } from 'antd'
+import { chunk } from 'lodash-es'
+import { useRef, useState } from 'react'
+import { Icon } from '../icon'
 import './style.css'
 
-export default function IconSelect(props: SelectProps) {
+export function IconSelect(props: SelectProps) {
   const [searchValue, setSearchValue] = useState('')
   const options = Object.keys(icons.icons).filter(e => e.includes(searchValue)).map((e) => {
     const icon = `${icons.prefix}:${e}`
     return { label: icon, value: icon }
   })
-  const iconList = _chunk(options, 15).map(row => ({ value: row.map(e => e.value).join(''), icons: row }))
+  const iconList = chunk(options, 15).map(row => ({ value: row.map(e => e.value).join(''), icons: row }))
 
   const optionRender = (option: any) => {
     const row: typeof options = option.data.icons
@@ -42,7 +46,7 @@ export default function IconSelect(props: SelectProps) {
   }
 
   return (
-    <ASelect
+    <Select
       classNames={{ popup: { root: 'icon-select-list' } }}
       value={props.value}
       placeholder="请选择"
@@ -58,6 +62,8 @@ export default function IconSelect(props: SelectProps) {
       onClear={onChange}
       onChange={() => { }}
     >
-    </ASelect>
+    </Select>
   )
 }
+
+export default IconSelect

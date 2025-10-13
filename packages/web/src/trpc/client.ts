@@ -1,4 +1,3 @@
-'use client'
 import type { AppRouter } from '@app/server'
 import type { inferRouterInputs, inferRouterOutputs } from '@trpc/server'
 import { createTRPCClient } from '@trpc/client'

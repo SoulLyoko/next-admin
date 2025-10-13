@@ -1,4 +1,8 @@
-export default function StatusSwitcher<T extends { status?: string }>(props: { data: T, onUpdate?: (data: T) => any }) {
+'use client'
+import { Switch } from 'antd'
+import { useState } from 'react'
+
+export function StatusSwitcher<T extends { status?: string }>(props: { data: T, onUpdate?: (data: T) => any }) {
   const [loading, setLoading] = useState(false)
   async function onChange(value: boolean) {
     try {
@@ -10,5 +14,7 @@ export default function StatusSwitcher<T extends { status?: string }>(props: { d
       setLoading(false)
     }
   }
-  return <ASwitch value={props.data.status === '1'} loading={loading} onChange={onChange} />
+  return <Switch value={props.data.status === '1'} loading={loading} onChange={onChange} />
 }
+
+export default StatusSwitcher

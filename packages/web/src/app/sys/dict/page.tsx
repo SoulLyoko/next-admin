@@ -1,6 +1,10 @@
 'use client'
 import type { DictPartialWithRelations } from '@app/db/zod'
-import type { CrudInstance } from '~/components/pro-crud'
+import type { CrudInstance } from '~/components'
+import { Typography } from 'antd'
+import { useRef } from 'react'
+import { defineProCrudProps, ProCrud } from '~/components'
+import StatusSwitcher from '~/components/status-switcher'
 import { client } from '~/trpc/client'
 
 type Dict = DictPartialWithRelations
@@ -36,7 +40,7 @@ export default function SysDict() {
           rules: [{ required: true }],
         },
         render(dom, row) {
-          return row.parentId ? row.value : <ATypography.Text copyable>{row.value}</ATypography.Text>
+          return row.parentId ? row.value : <Typography.Text copyable>{row.value}</Typography.Text>
         },
       },
       {

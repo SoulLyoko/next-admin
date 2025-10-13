@@ -40,7 +40,6 @@
     "@types/react": "catalog:",
     "@types/react-dom": "catalog:",
     "fast-glob": "catalog:",
-    "postcss": "catalog:",
-    "unplugin-auto-import": "catalog:"
+    "postcss": "catalog:"
   }
 }

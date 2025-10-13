@@ -1,5 +1,6 @@
 'use client'
 import type { PostPartial } from '@app/db/zod'
+import { defineProCrudProps, ProCrud, StatusSwitcher } from '~/components'
 import { client } from '~/trpc/client'
 
 export default function SysPost() {

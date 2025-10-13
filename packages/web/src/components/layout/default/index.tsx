@@ -1,5 +1,6 @@
 'use client'
 import type { ThemeConfig } from 'antd'
+import { ConfigProvider, Layout } from 'antd'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
 import LayoutContent from './content'
@@ -7,7 +8,7 @@ import LayoutFooter from './footer'
 import LayoutHeader from './header'
 import LayoutSider from './sider'
 
-export default function LayoutDefault({ children }: { children: React.ReactNode }) {
+export function LayoutDefault({ children }: { children: React.ReactNode }) {
   const session = useSession()
   const router = useRouter()
 
@@ -29,17 +30,19 @@ export default function LayoutDefault({ children }: { children: React.ReactNode 
   }
 
   return (
-    <AConfigProvider theme={theme}>
-      <ALayout className="h-full" hasSider>
+    <ConfigProvider theme={theme}>
+      <Layout className="h-full" hasSider>
         <LayoutSider />
-        <ALayout>
+        <Layout>
           <LayoutHeader />
           <LayoutContent>
             {children}
           </LayoutContent>
           <LayoutFooter />
-        </ALayout>
-      </ALayout>
-    </AConfigProvider>
+        </Layout>
+      </Layout>
+    </ConfigProvider>
   )
 }
+
+export default LayoutDefault

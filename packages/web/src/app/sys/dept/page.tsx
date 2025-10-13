@@ -1,6 +1,8 @@
 'use client'
 import type { DeptPartialWithRelations } from '@app/db/zod'
-import type { CrudInstance } from '~/components/pro-crud'
+import type { CrudInstance } from '~/components'
+import { useRef } from 'react'
+import { defineProCrudProps, ProCrud, StatusSwitcher } from '~/components'
 import { client } from '~/trpc/client'
 
 type Dept = DeptPartialWithRelations

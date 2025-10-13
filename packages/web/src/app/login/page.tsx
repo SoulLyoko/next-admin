@@ -1,4 +1,6 @@
 'use client'
+import { LoginFormPage, ProFormText } from '@ant-design/pro-components'
+import { Divider } from 'antd'
 import { signIn } from 'next-auth/react'
 
 export default function Login() {
@@ -7,7 +9,7 @@ export default function Login() {
   }
 
   return (
-    <ProLoginFormPage
+    <LoginFormPage
       logo="/favicon.ico"
       title="Admin"
       subTitle="用户登录"
@@ -16,7 +18,7 @@ export default function Login() {
       onFinish={form => onSubmit('credentials', form)}
       actions={(
         <div className="flex-center flex-col">
-          <ADivider>其他登录方式</ADivider>
+          <Divider>其他登录方式</Divider>
           <div className="flex gap-2">
             <a onClick={() => onSubmit('wechat')}>
               <img className="size-32px" src="/wechat.svg" alt="wechat" />
@@ -33,6 +35,6 @@ export default function Login() {
       <div className="mb-5 text-right">
         <a href="/signup">注册</a>
       </div>
-    </ProLoginFormPage>
+    </LoginFormPage>
   )
 }

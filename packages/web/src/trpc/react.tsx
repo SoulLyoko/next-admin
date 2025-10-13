@@ -6,6 +6,7 @@ import { QueryClientProvider } from '@tanstack/react-query'
 import { createTRPCReact } from '@trpc/react-query'
 
 import { SessionProvider } from 'next-auth/react'
+import { useState } from 'react'
 import { createHttpBatchStreamLink, createLoggerLink } from './links'
 import { createQueryClient } from './query-client'
 

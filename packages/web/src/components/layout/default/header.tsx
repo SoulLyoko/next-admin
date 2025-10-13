@@ -1,5 +1,7 @@
 import type { MenuProps } from 'antd'
+import { Avatar, Dropdown, Layout } from 'antd'
 import { signOut } from 'next-auth/react'
+import { Icon } from '~/components'
 import { api } from '~/trpc/react'
 
 export default function LayoutHeader() {
@@ -8,7 +10,7 @@ export default function LayoutHeader() {
   const dropdownItems: MenuProps['items'] = [
     {
       key: 'user',
-      icon: <AAvatar src={user?.image}></AAvatar>,
+      icon: <Avatar src={user?.image}></Avatar>,
       label: user?.nickname ?? user?.name ?? '未知用户',
     },
     {
@@ -27,17 +29,17 @@ export default function LayoutHeader() {
   ]
 
   return (
-    <ALayout.Header className="b-b b-light b-solid flex gap-2 items-center justify-between">
+    <Layout.Header className="b-b b-light b-solid flex gap-2 items-center justify-between">
       <div className="flex-1"></div>
       <div>
         {user
           ? (
-              <ADropdown menu={{ items: dropdownItems }}>
-                <AAvatar className="cursor-pointer" src={user?.image}></AAvatar>
-              </ADropdown>
+              <Dropdown menu={{ items: dropdownItems }}>
+                <Avatar className="cursor-pointer" src={user?.image}></Avatar>
+              </Dropdown>
             )
           : <a href="/login">登录</a> }
       </div>
-    </ALayout.Header>
+    </Layout.Header>
   )
 }

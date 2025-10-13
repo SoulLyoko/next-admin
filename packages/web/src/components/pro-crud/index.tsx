@@ -1,7 +1,11 @@
 'use client'
-import type { ActionType, BetaSchemaForm, ProColumns, ProFormColumnsType, ProFormInstance, ProTableProps } from '@ant-design/pro-components'
+import type { ActionType, ProColumns, ProFormColumnsType, ProFormInstance, ProTableProps } from '@ant-design/pro-components'
 import type { MaybePromise } from '@trpc/server/unstable-core-do-not-import'
 import type { GetProps } from 'antd'
+import { BetaSchemaForm, ProTable } from '@ant-design/pro-components'
+import { Icon } from '@iconify/react'
+import { Popconfirm, Tooltip } from 'antd'
+import { useImperativeHandle, useRef, useState } from 'react'
 
 type Data = Record<string, any>
 type SchemaFormProps<T, V> = GetProps<typeof BetaSchemaForm<T, V>>
@@ -41,7 +45,11 @@ export type ProCrudProps<T = any, P = any, V = 'text'> = ProTableProps<T, P, V> 
   batchDelBtn?: boolean | ((selectedRowKeys: React.Key[], selectedRows: T[]) => React.ReactNode)
 }
 
-export default function ProCrud<T extends Data = Data, P extends Data = Data, V = 'text'>(props: ProCrudProps<T, P, V>) {
+export function defineProCrudProps<T = any, P = T, V = 'text'>(props: ProCrudProps<T, P, V>) {
+  return props
+}
+
+export function ProCrud<T extends Data = Data, P extends Data = Data, V = 'text'>(props: ProCrudProps<T, P, V>) {
   const {
     formRef: propFormRef,
     actionRef: propsActionRef,
@@ -172,7 +180,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
 
     const row = args[1]
     return (
-      <APopconfirm
+      <Popconfirm
         title="删除"
         description="确认删除吗?"
         onConfirm={() => onRemove(row)}
@@ -188,7 +196,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
       return restProps.batchDelBtn(selectedRowKeys, selectedRows)
 
     return (
-      <APopconfirm
+      <Popconfirm
         title="批量删除"
         description={`确认批量删除已选择的 ${selectedRowKeys.length} 项吗?`}
         onConfirm={async () => onBatchRemove(selectedRowKeys, selectedRows)}
@@ -202,9 +210,9 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
       return
 
     return restProps.addBtn ?? (
-      <ATooltip className="ant-pro-table-list-toolbar-setting-item" title="新增">
+      <Tooltip className="ant-pro-table-list-toolbar-setting-item" title="新增">
         <Icon icon="ant-design:plus-outlined" onClick={() => onAdd()} />
-      </ATooltip>
+      </Tooltip>
     )
   }
 
@@ -235,7 +243,7 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
       />
 
       {open && (
-        <ProBetaSchemaForm
+        <BetaSchemaForm
           layoutType="ModalForm"
           open={open}
           onOpenChange={setOpen}
@@ -247,3 +255,5 @@ export default function ProCrud<T extends Data = Data, P extends Data = Data, V 
     </>
   )
 }
+
+export default ProCrud

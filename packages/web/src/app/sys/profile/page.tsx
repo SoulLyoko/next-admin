@@ -1,8 +1,11 @@
 'use client'
 import type { UploadProps } from 'antd'
-import { message } from 'antd'
+import { BetaSchemaForm } from '@ant-design/pro-components'
+import { Card, Divider, message, Upload } from 'antd'
+import { Icon } from '~/components'
 import { client } from '~/trpc/client'
 import { api } from '~/trpc/react'
+import { getFileBase64 } from '~/utils/file'
 
 export default function SysProfile() {
   const { data: user, isFetching, refetch } = api.user.info.useQuery()
@@ -24,17 +27,17 @@ export default function SysProfile() {
 
   return (
     <div className="p-5 flex gap-5">
-      <ACard className="w-xs" loading={isFetching}>
+      <Card className="w-xs" loading={isFetching}>
         <div className="flex-center flex-col">
-          <AUpload listType="picture-circle" showUploadList={false} onChange={handleChange}>
+          <Upload listType="picture-circle" showUploadList={false} onChange={handleChange}>
             {user?.image ? <img src={user.image} alt="avatar" className="rd-full" /> : <Icon icon="ant-design:plus-outlined" />}
-          </AUpload>
+          </Upload>
           <div className="text-lg font-bold mt-2">
             {user?.nickname}
           </div>
-          <ADivider></ADivider>
+          <Divider></Divider>
         </div>
-        <ProBetaSchemaForm
+        <BetaSchemaForm
           initialValues={user ?? {}}
           layout="horizontal"
           colon={false}
@@ -49,11 +52,11 @@ export default function SysProfile() {
             { title: <Icon icon="ant-design:user-add-outlined" />, dataIndex: 'roles', render: () => user?.roles?.map(e => e.role.name).join(',') },
           ]}
         />
-      </ACard>
+      </Card>
 
       <div className="flex flex-1 flex-col gap-5">
-        <ACard loading={isFetching} title="基本信息">
-          <ProBetaSchemaForm
+        <Card loading={isFetching} title="基本信息">
+          <BetaSchemaForm
             initialValues={user ?? {}}
             layout="horizontal"
             onFinish={async (form: any) => {
@@ -66,9 +69,9 @@ export default function SysProfile() {
               { title: '性别', dataIndex: 'sex', valueType: 'select', request: () => queryDict('sys_user_sex') },
             ]}
           />
-        </ACard>
-        <ACard title="修改密码" loading={isFetching}>
-          <ProBetaSchemaForm
+        </Card>
+        <Card title="修改密码" loading={isFetching}>
+          <BetaSchemaForm
             layout="horizontal"
             onFinish={async (form: any) => {
               if (form.newPassword !== form.confirmPassword) {
@@ -98,7 +101,7 @@ export default function SysProfile() {
               },
             ]}
           />
-        </ACard>
+        </Card>
       </div>
 
     </div>

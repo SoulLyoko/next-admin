@@ -1,6 +1,9 @@
 import type { MenuPartialWithRelations } from '@app/db/zod'
 import type { ItemType } from 'antd/es/menu/interface'
+import { Layout, Menu } from 'antd'
 import { usePathname, useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
+import { Icon } from '~/components'
 import { api } from '~/trpc/react'
 
 type MenuItem = ItemType & { children?: ItemType[] }
@@ -39,13 +42,13 @@ export default function LayoutSider() {
   }
 
   return (
-    <ALayout.Sider className="b-r b-light b-solid" theme="light" width="300px" collapsible onCollapse={setCollapsed}>
+    <Layout.Sider className="b-r b-light b-solid" theme="light" width="300px" collapsible onCollapse={setCollapsed}>
       <div className="flex-center gap-2 h-60px cursor-pointer" onClick={() => router.push('/')}>
         <img className="size-7" src="/favicon.ico" />
         {!collapsed && <span className="text-lg c-gray font-bold">Admin</span>}
       </div>
       {openKeys && (
-        <AMenu
+        <Menu
           className="flex-1 of-auto"
           items={getItems(data)}
           mode="inline"
@@ -54,6 +57,6 @@ export default function LayoutSider() {
           onSelect={onSelect}
         />
       )}
-    </ALayout.Sider>
+    </Layout.Sider>
   )
 }

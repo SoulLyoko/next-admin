@@ -1,5 +1,6 @@
 'use client'
 import type { SessionPartialWithRelations } from '@app/db/zod'
+import { defineProCrudProps, ProCrud } from '~/components'
 import { client } from '~/trpc/client'
 
 export default function SysSession() {

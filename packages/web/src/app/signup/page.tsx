@@ -1,4 +1,5 @@
 'use client'
+import { LoginFormPage, ProFormText } from '@ant-design/pro-components'
 import { signIn } from 'next-auth/react'
 import { client } from '~/trpc/client'
 
@@ -10,7 +11,7 @@ export default function Signup() {
   }
 
   return (
-    <ProLoginFormPage
+    <LoginFormPage
       logo="/favicon.ico"
       title="Admin"
       subTitle="用户注册"
@@ -23,6 +24,6 @@ export default function Signup() {
       <div className="mb-5 text-right">
         <a href="/login">登录</a>
       </div>
-    </ProLoginFormPage>
+    </LoginFormPage>
   )
 }
