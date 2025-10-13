@@ -43,7 +43,7 @@ export default function SysProfile() {
           columns={[
             { title: <Icon icon="ant-design:user-outlined" />, dataIndex: 'name' },
             { title: <Icon icon="ant-design:mail-outlined" />, dataIndex: 'email' },
-            { title: sexIconMap[user?.sex ?? ''] ?? sexIconMap.unknown, dataIndex: 'sex', valueType: 'select', request: () => queryDict('sex') },
+            { title: sexIconMap[user?.sex ?? ''] ?? sexIconMap.unknown, dataIndex: 'sex', valueType: 'select', request: () => queryDict('sys_user_sex') },
             { title: <Icon icon="ant-design:cluster-outlined" />, dataIndex: 'depts', render: () => user?.depts?.map(e => e.dept.name).join(',') },
             { title: <Icon icon="ant-design:idcard-outlined" />, dataIndex: 'posts', render: () => user?.posts?.map(e => e.post.name).join(',') },
             { title: <Icon icon="ant-design:user-add-outlined" />, dataIndex: 'roles', render: () => user?.roles?.map(e => e.role.name).join(',') },
@@ -63,7 +63,7 @@ export default function SysProfile() {
             columns={[
               { title: '姓名', dataIndex: 'nickname' },
               { title: '邮箱', dataIndex: 'email' },
-              { title: '性别', dataIndex: 'sex', valueType: 'select', request: () => queryDict('sex') },
+              { title: '性别', dataIndex: 'sex', valueType: 'select', request: () => queryDict('sys_user_sex') },
             ]}
           />
         </ACard>
