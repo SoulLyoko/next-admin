@@ -1,8 +1,9 @@
 'use client'
 import type { ThemeConfig } from 'antd'
-import { ConfigProvider, Layout } from 'antd'
+import { ConfigProvider, Layout, theme } from 'antd'
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation'
+import { useDark } from '~/hooks'
 import LayoutContent from './content'
 import LayoutFooter from './footer'
 import LayoutHeader from './header'
@@ -15,22 +16,24 @@ export function LayoutDefault({ children }: { children: React.ReactNode }) {
   if (!session)
     router.replace('/login')
 
-  const theme: ThemeConfig = {
+  const [isDark] = useDark()
+  const themeConfig: ThemeConfig = {
     cssVar: true,
+    algorithm: isDark ? theme.darkAlgorithm : theme.defaultAlgorithm,
     components: {
       Layout: {
-        headerBg: 'white',
+        headerBg: 'var(--ant-color-bg-container)',
         headerHeight: '60px',
         headerPadding: '0 20px',
         footerPadding: '10px 20px',
-        footerBg: 'white',
+        footerBg: 'var(--ant-color-bg-container)',
         triggerHeight: '40px',
       },
     },
   }
 
   return (
-    <ConfigProvider theme={theme}>
+    <ConfigProvider theme={themeConfig}>
       <Layout className="h-full" hasSider>
         <LayoutSider />
         <Layout>

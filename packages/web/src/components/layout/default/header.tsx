@@ -1,7 +1,9 @@
 import type { MenuProps } from 'antd'
-import { Avatar, Dropdown, Layout } from 'antd'
+import { useFullscreen } from '@reactuses/core'
+import { Avatar, Button, Dropdown, Layout } from 'antd'
 import { signOut } from 'next-auth/react'
 import { Icon } from '~/components'
+import { useDark } from '~/hooks'
 import { api } from '~/trpc/react'
 
 export default function LayoutHeader() {
@@ -28,9 +30,14 @@ export default function LayoutHeader() {
     },
   ]
 
+  const [isDark, toggleDark] = useDark()
+  const [isFullscreen, { toggleFullscreen }] = useFullscreen(() => document.documentElement)
+
   return (
-    <Layout.Header className="b-b b-light b-solid flex gap-2 items-center justify-between">
+    <Layout.Header className="flex gap-2 items-center justify-between">
       <div className="flex-1"></div>
+      <Button type="text" icon={isDark ? <Icon icon="ant-design:moon-outlined" /> : <Icon icon="ant-design:sun-outlined" />} onClick={toggleDark}></Button>
+      <Button type="text" icon={isFullscreen ? <Icon icon="ant-design:fullscreen-exit-outlined" /> : <Icon icon="ant-design:fullscreen-outlined" />} onClick={toggleFullscreen}></Button>
       <div>
         {user
           ? (
@@ -38,7 +45,7 @@ export default function LayoutHeader() {
                 <Avatar className="cursor-pointer" src={user?.image}></Avatar>
               </Dropdown>
             )
-          : <a href="/login">登录</a> }
+          : <a href="/login">登录</a>}
       </div>
     </Layout.Header>
   )

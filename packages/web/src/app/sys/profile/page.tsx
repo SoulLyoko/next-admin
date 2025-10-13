@@ -26,7 +26,7 @@ export default function SysProfile() {
   }
 
   return (
-    <div className="p-5 flex gap-5">
+    <div className="flex gap-5">
       <Card className="w-xs" loading={isFetching}>
         <div className="flex-center flex-col">
           <Upload listType="picture-circle" showUploadList={false} onChange={handleChange}>

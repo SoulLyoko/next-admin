@@ -7,6 +7,7 @@ export default function SysLog() {
   const crudProps = defineProCrudProps<LogPartial>({
     rowKey: 'id',
     request: client.log.page.query,
+    addBtn: false,
     viewBtn: true,
     editBtn: false,
     delBtn: false,
@@ -41,14 +42,16 @@ export default function SysLog() {
       {
         title: '请求参数',
         dataIndex: 'input',
-        valueType: 'textarea',
+        valueType: 'jsonCode',
         hideInTable: true,
+        fieldProps: { style: { width: '100%' } },
       },
       {
         title: '请求头',
         dataIndex: 'headers',
-        valueType: 'textarea',
+        valueType: 'jsonCode',
         hideInTable: true,
+        fieldProps: { style: { width: '100%' } },
       },
       {
         title: '错误信息',
@@ -62,7 +65,8 @@ export default function SysLog() {
             : [{
                 title: '错误信息',
                 dataIndex: 'error',
-                valueType: 'textarea',
+                valueType: 'code',
+                fieldProps: { style: { width: '100%' } },
               }]
         },
       },

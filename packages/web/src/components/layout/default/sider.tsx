@@ -1,6 +1,6 @@
 import type { MenuPartialWithRelations } from '@app/db/zod'
 import type { ItemType } from 'antd/es/menu/interface'
-import { Layout, Menu } from 'antd'
+import { Layout, Menu, Typography } from 'antd'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Icon } from '~/components'
@@ -43,10 +43,10 @@ export default function LayoutSider() {
   }
 
   return (
-    <Layout.Sider className="b-r b-light b-solid" theme="light" width="300px" collapsible onCollapse={setCollapsed}>
+    <Layout.Sider theme="light" width="300px" collapsible onCollapse={setCollapsed}>
       <div className="flex-center gap-2 h-60px cursor-pointer" onClick={() => router.push('/')}>
-        <img className="size-7" src={APP_LOGO} />
-        {!collapsed && <span className="text-lg font-bold">{APP_TITLE}</span>}
+        <img className="size-8" src={APP_LOGO} />
+        {!collapsed && <Typography.Text className="font-bold text-lg!">{APP_TITLE}</Typography.Text>}
       </div>
       {openKeys && (
         <Menu
