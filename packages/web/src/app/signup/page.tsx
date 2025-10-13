@@ -1,6 +1,7 @@
 'use client'
 import { LoginFormPage, ProFormText } from '@ant-design/pro-components'
 import { signIn } from 'next-auth/react'
+import { APP_LOGO, APP_TITLE } from '~/constants/app'
 import { client } from '~/trpc/client'
 
 export default function Signup() {
@@ -12,8 +13,8 @@ export default function Signup() {
 
   return (
     <LoginFormPage
-      logo="/favicon.ico"
-      title="Admin"
+      logo={APP_LOGO}
+      title={APP_TITLE}
       subTitle="用户注册"
       backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
       submitter={{ searchConfig: { submitText: '注册' } }}

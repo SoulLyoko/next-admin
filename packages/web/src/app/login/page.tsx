@@ -2,6 +2,7 @@
 import { LoginFormPage, ProFormText } from '@ant-design/pro-components'
 import { Divider } from 'antd'
 import { signIn } from 'next-auth/react'
+import { APP_LOGO, APP_TITLE } from '~/constants/app'
 
 export default function Login() {
   function onSubmit(type: string | any, form?: any) {
@@ -10,8 +11,8 @@ export default function Login() {
 
   return (
     <LoginFormPage
-      logo="/favicon.ico"
-      title="Admin"
+      logo={APP_LOGO}
+      title={APP_TITLE}
       subTitle="用户登录"
       backgroundVideoUrl="https://gw.alipayobjects.com/v/huamei_gcee1x/afts/video/jXRBRK_VAwoAAAAAAAAAAAAAK4eUAQBr"
       containerStyle={{ backgroundColor: 'rgba(255, 255, 255, 0.5)' }}

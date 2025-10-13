@@ -4,6 +4,7 @@ import { Layout, Menu } from 'antd'
 import { usePathname, useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
 import { Icon } from '~/components'
+import { APP_LOGO, APP_TITLE } from '~/constants/app'
 import { api } from '~/trpc/react'
 
 type MenuItem = ItemType & { children?: ItemType[] }
@@ -44,8 +45,8 @@ export default function LayoutSider() {
   return (
     <Layout.Sider className="b-r b-light b-solid" theme="light" width="300px" collapsible onCollapse={setCollapsed}>
       <div className="flex-center gap-2 h-60px cursor-pointer" onClick={() => router.push('/')}>
-        <img className="size-7" src="/favicon.ico" />
-        {!collapsed && <span className="text-lg c-gray font-bold">Admin</span>}
+        <img className="size-7" src={APP_LOGO} />
+        {!collapsed && <span className="text-lg font-bold">{APP_TITLE}</span>}
       </div>
       {openKeys && (
         <Menu
