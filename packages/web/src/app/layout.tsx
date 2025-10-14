@@ -1,11 +1,11 @@
 import type { Metadata } from 'next'
 import { AntdRegistry } from '@ant-design/nextjs-registry'
 import { Analytics } from '@vercel/analytics/next'
-import { ConfigProvider, theme } from 'antd'
+import { ThemeProvider } from 'next-themes'
 import { APP_DESC, APP_LOGO, APP_TITLE } from '~/constants/app'
 import { TRPCReactProvider } from '~/trpc/react'
+import '@unocss/reset/normalize.css'
 import '@ant-design/v5-patch-for-react-19'
-import '@unocss/reset/tailwind.css'
 import '~/styles/globals.css'
 
 export const metadata: Metadata = {
@@ -16,13 +16,13 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-CN">
+    <html lang="zh-CN" suppressHydrationWarning>
       <body>
         <TRPCReactProvider>
           <AntdRegistry>
-            <ConfigProvider theme={{ algorithm: theme.darkAlgorithm }}>
+            <ThemeProvider>
               {children}
-            </ConfigProvider>
+            </ThemeProvider>
           </AntdRegistry>
         </TRPCReactProvider>
 

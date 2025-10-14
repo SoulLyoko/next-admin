@@ -1,22 +1,9 @@
-import type { UseDarkOptions } from '@reactuses/core'
-import { useDarkMode } from '@reactuses/core'
-import { useRouter } from 'next/navigation'
+import { useTheme } from 'next-themes'
+import { useMemo } from 'react'
 
-export function useDark(options?: UseDarkOptions) {
-  const [isDark, toggleDark] = useDarkMode({
-    classNameDark: 'dark',
-    classNameLight: 'light',
-    defaultValue: localStorage.getItem('reactuses-color-scheme') === 'dark',
-    ...options,
-  })
-
-  const router = useRouter()
-
-  return [
-    isDark,
-    () => {
-      toggleDark()
-      router.refresh()
-    },
-  ] as const
+export function useDark() {
+  const { theme, setTheme } = useTheme()
+  const isDark = useMemo(() => theme === 'dark', [theme])
+  const toggleDark = () => setTheme(theme === 'dark' ? 'light' : 'dark')
+  return { isDark, toggleDark }
 }

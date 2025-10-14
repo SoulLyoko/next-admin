@@ -1,5 +1,5 @@
 import type { MenuProps } from 'antd'
-import { useFullscreen } from '@reactuses/core'
+import { useFullscreen } from 'ahooks'
 import { Avatar, Button, Dropdown, Layout } from 'antd'
 import { signOut } from 'next-auth/react'
 import { Icon } from '~/components'
@@ -30,14 +30,14 @@ export default function LayoutHeader() {
     },
   ]
 
-  const [isDark, toggleDark] = useDark()
+  const { isDark, toggleDark } = useDark()
   const [isFullscreen, { toggleFullscreen }] = useFullscreen(() => document.documentElement)
 
   return (
     <Layout.Header className="flex gap-2 items-center justify-between">
       <div className="flex-1"></div>
       <Button type="text" icon={isDark ? <Icon icon="ant-design:moon-outlined" /> : <Icon icon="ant-design:sun-outlined" />} onClick={toggleDark}></Button>
-      <Button type="text" icon={isFullscreen ? <Icon icon="ant-design:fullscreen-exit-outlined" /> : <Icon icon="ant-design:fullscreen-outlined" />} onClick={toggleFullscreen}></Button>
+      <Button type="text" icon={isFullscreen ? <Icon icon="ant-design:compress-outlined" /> : <Icon icon="ant-design:expand-outlined" />} onClick={toggleFullscreen}></Button>
       <div>
         {user
           ? (
