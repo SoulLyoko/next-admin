@@ -13,6 +13,7 @@ catalog:
   '@iconify-json/ant-design': ^1.2.5
   '@iconify/react': ^6.0.2
   '@prisma/client': ^6.17.1
+  '@reactuses/core': ^6.1.0
   '@t3-oss/env-nextjs': ^0.13.8
   '@tanstack/react-query': ^5.90.2
   '@trpc/client': ^11.6.0
@@ -26,7 +27,6 @@ catalog:
   '@unocss/postcss': ^66.5.3
   '@unocss/reset': ^66.5.3
   '@vercel/analytics': ^1.5.0
-  ahooks: ^3.9.5
   antd: ^5.27.4
   defu: ^6.1.4
   eslint: ^9.37.0

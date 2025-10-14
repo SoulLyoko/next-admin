@@ -1,9 +1,10 @@
 import type { MenuProps } from 'antd'
-import { useFullscreen } from 'ahooks'
+import { useFullscreen } from '@reactuses/core'
 import { Avatar, Button, Dropdown, Layout } from 'antd'
 import { signOut } from 'next-auth/react'
+import { useMemo } from 'react'
 import { Icon } from '~/components'
-import { useDark } from '~/hooks'
+import { useToggleTheme } from '~/hooks'
 import { api } from '~/trpc/react'
 
 export default function LayoutHeader() {
@@ -30,13 +31,19 @@ export default function LayoutHeader() {
     },
   ]
 
-  const { isDark, toggleDark } = useDark()
   const [isFullscreen, { toggleFullscreen }] = useFullscreen(() => document.documentElement)
+  const { theme, toggleTheme } = useToggleTheme()
+  const themeIconMap: Record<string, string> = {
+    system: 'ant-design:desktop-outlined',
+    dark: 'ant-design:moon-outlined',
+    light: 'ant-design:sun-outlined',
+  }
+  const themeIcon = useMemo(() => themeIconMap[theme ?? 'system'], [theme])
 
   return (
     <Layout.Header className="flex gap-2 items-center justify-between">
       <div className="flex-1"></div>
-      <Button type="text" icon={isDark ? <Icon icon="ant-design:moon-outlined" /> : <Icon icon="ant-design:sun-outlined" />} onClick={toggleDark}></Button>
+      <Button type="text" icon={<Icon icon={themeIcon} />} onClick={toggleTheme}></Button>
       <Button type="text" icon={isFullscreen ? <Icon icon="ant-design:compress-outlined" /> : <Icon icon="ant-design:expand-outlined" />} onClick={toggleFullscreen}></Button>
       <div>
         {user
