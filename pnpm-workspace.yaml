@@ -53,6 +53,7 @@ catalog:
   unocss: ^66.5.3
   zod: ^4.1.12
   zod-prisma-types: ^3.3.5
+  zustand: ^5.0.8
 
 ignoredBuiltDependencies:
   - esbuild

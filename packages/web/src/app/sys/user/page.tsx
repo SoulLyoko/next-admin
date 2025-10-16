@@ -1,14 +1,13 @@
 'use client'
 import type { UploadProps } from 'antd'
-import type { CrudInstance } from '~/components/pro-crud'
+import type { CrudInstance } from '~/components'
 import type { RouterOutputs } from '~/trpc/client'
 import { Icon } from '@iconify/react'
 import { Upload } from 'antd'
 import { useRef } from 'react'
-import { StatusSwitcher } from '~/components'
-import { defineProCrudProps, ProCrud } from '~/components/pro-crud'
+import { defineProCrudProps, ProCrud, StatusSwitcher } from '~/components'
 import { client } from '~/trpc/client'
-import { getFileBase64 } from '~/utils/file'
+import { getFileBase64 } from '~/utils'
 
 type User = Partial<RouterOutputs['user']['page']['data'][number]>
 
@@ -39,7 +38,7 @@ export default function SysUser() {
           }
           return (
             <Upload listType="picture-circle" showUploadList={false} onChange={onChange}>
-              {image ? <img src={image} alt="avatar" className="rd-full" /> : <Icon icon="ant-design:plus-outlined" />}
+              {image ? <img src={image} alt="avatar" className="rd-full size-full" /> : <Icon icon="ant-design:plus-outlined" />}
             </Upload>
           )
         },

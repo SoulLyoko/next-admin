@@ -1,7 +1,7 @@
 'use client'
 import { LoginFormPage, ProFormText } from '@ant-design/pro-components'
 import { signIn } from 'next-auth/react'
-import { APP_LOGO, APP_TITLE } from '~/constants/app'
+import { APP_LOGO, APP_TITLE } from '~/constants'
 import { client } from '~/trpc/client'
 
 export default function Signup() {

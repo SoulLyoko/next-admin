@@ -3,8 +3,7 @@ import type { DictPartialWithRelations } from '@app/db/zod'
 import type { CrudInstance } from '~/components'
 import { Typography } from 'antd'
 import { useRef } from 'react'
-import { defineProCrudProps, ProCrud } from '~/components'
-import StatusSwitcher from '~/components/status-switcher'
+import { defineProCrudProps, ProCrud, StatusSwitcher } from '~/components'
 import { client } from '~/trpc/client'
 
 type Dict = DictPartialWithRelations

@@ -4,6 +4,8 @@ import { defineProCrudProps, ProCrud } from '~/components'
 import { client } from '~/trpc/client'
 
 export default function SysLog() {
+  const codeStyle = { width: '100%', boxSizing: 'border-box' }
+
   const crudProps = defineProCrudProps<LogPartial>({
     rowKey: 'id',
     request: client.log.page.query,
@@ -44,14 +46,14 @@ export default function SysLog() {
         dataIndex: 'input',
         valueType: 'jsonCode',
         hideInTable: true,
-        fieldProps: { style: { width: '100%' } },
+        fieldProps: { style: codeStyle },
       },
       {
         title: '请求头',
         dataIndex: 'headers',
         valueType: 'jsonCode',
         hideInTable: true,
-        fieldProps: { style: { width: '100%' } },
+        fieldProps: { style: codeStyle },
       },
       {
         title: '错误信息',
@@ -66,7 +68,7 @@ export default function SysLog() {
                 title: '错误信息',
                 dataIndex: 'error',
                 valueType: 'code',
-                fieldProps: { style: { width: '100%' } },
+                fieldProps: { style: codeStyle },
               }]
         },
       },

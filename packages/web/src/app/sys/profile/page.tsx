@@ -1,11 +1,11 @@
 'use client'
 import type { UploadProps } from 'antd'
-import { BetaSchemaForm } from '@ant-design/pro-components'
-import { Card, Divider, message, Upload } from 'antd'
+import { BetaSchemaForm, ProCard } from '@ant-design/pro-components'
+import { Divider, message, Upload } from 'antd'
 import { Icon } from '~/components'
 import { client } from '~/trpc/client'
 import { api } from '~/trpc/react'
-import { getFileBase64 } from '~/utils/file'
+import { getFileBase64 } from '~/utils'
 
 export default function SysProfile() {
   const { data: user, isFetching, refetch } = api.user.info.useQuery()
@@ -27,10 +27,10 @@ export default function SysProfile() {
 
   return (
     <div className="flex gap-5">
-      <Card className="w-xs" loading={isFetching}>
+      <ProCard className="w-xs" loading={isFetching}>
         <div className="flex-center flex-col">
           <Upload listType="picture-circle" showUploadList={false} onChange={handleChange}>
-            {user?.image ? <img src={user.image} alt="avatar" className="rd-full" /> : <Icon icon="ant-design:plus-outlined" />}
+            {user?.image ? <img src={user.image} alt="avatar" className="rd-full size-full" /> : <Icon icon="ant-design:plus-outlined" />}
           </Upload>
           <div className="text-lg font-bold mt-2">
             {user?.nickname}
@@ -52,10 +52,10 @@ export default function SysProfile() {
             { title: <Icon icon="ant-design:user-add-outlined" />, dataIndex: 'roles', render: () => user?.roles?.map(e => e.role.name).join(',') },
           ]}
         />
-      </Card>
+      </ProCard>
 
       <div className="flex flex-1 flex-col gap-5">
-        <Card loading={isFetching} title="基本信息">
+        <ProCard loading={isFetching} title="基本信息">
           <BetaSchemaForm
             initialValues={user ?? {}}
             layout="horizontal"
@@ -69,8 +69,8 @@ export default function SysProfile() {
               { title: '性别', dataIndex: 'sex', valueType: 'select', request: () => queryDict('sys_user_sex') },
             ]}
           />
-        </Card>
-        <Card title="修改密码" loading={isFetching}>
+        </ProCard>
+        <ProCard title="修改密码" loading={isFetching}>
           <BetaSchemaForm
             layout="horizontal"
             onFinish={async (form: any) => {
@@ -101,7 +101,7 @@ export default function SysProfile() {
               },
             ]}
           />
-        </Card>
+        </ProCard>
       </div>
 
     </div>

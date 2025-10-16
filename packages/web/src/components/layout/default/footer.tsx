@@ -1,5 +1,5 @@
 import { Layout } from 'antd'
-import { APP_DESC, APP_TITLE } from '~/constants/app'
+import { APP_DESC, APP_TITLE } from '~/constants'
 
 export default function LayoutFooter() {
   return (

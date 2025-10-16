@@ -30,7 +30,8 @@
     "react-dom": "catalog:",
     "superjson": "catalog:",
     "unocss": "catalog:",
-    "zod": "catalog:"
+    "zod": "catalog:",
+    "zustand": "catalog:"
   },
   "devDependencies": {
     "@app/db": "workspace:*",

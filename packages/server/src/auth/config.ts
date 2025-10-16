@@ -31,6 +31,7 @@ const getExpires = () => new Date(Date.now() + sessionMaxAge)
  * @see https://next-auth.js.org/configuration/options
  */
 export const authConfig = {
+  trustHost: true,
   providers: [
     Credentials,
     Wechat({

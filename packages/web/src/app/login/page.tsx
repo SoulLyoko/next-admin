@@ -2,7 +2,7 @@
 import { LoginFormPage, ProFormText } from '@ant-design/pro-components'
 import { Divider } from 'antd'
 import { signIn } from 'next-auth/react'
-import { APP_LOGO, APP_TITLE } from '~/constants/app'
+import { APP_LOGO, APP_TITLE } from '~/constants'
 
 export default function Login() {
   function onSubmit(type: string | any, form?: any) {
