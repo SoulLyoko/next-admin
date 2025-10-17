@@ -1,6 +1,7 @@
 import type { MenuProps } from 'antd'
 import { Avatar, Dropdown, Typography } from 'antd'
 import { signOut } from 'next-auth/react'
+import Link from 'next/link'
 import { Icon } from '~/components'
 import { api } from '~/trpc/react'
 
@@ -11,12 +12,12 @@ export default function LayoutAvatar() {
     {
       key: 'home',
       icon: <Icon icon="ant-design:home-outlined" width="14" />,
-      label: <a href="/">首页</a>,
+      label: <Link href="/">首页</Link>,
     },
     {
       key: 'profile',
       icon: <Icon icon="ant-design:user-outlined" width="14" />,
-      label: <a href="/sys/profile">个人中心</a>,
+      label: <Link href="/sys/profile">个人中心</Link>,
     },
     {
       key: 'signout',

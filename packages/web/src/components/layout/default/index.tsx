@@ -1,6 +1,6 @@
 'use client'
 import type { MenuDataItem } from '@ant-design/pro-components'
-import { GridContent, ProLayout } from '@ant-design/pro-components'
+import { GridContent, ProLayout, SettingDrawer } from '@ant-design/pro-components'
 import { useSession } from 'next-auth/react'
 import { usePathname, useRouter } from 'next/navigation'
 import { Icon } from '~/components'
@@ -32,7 +32,7 @@ export function LayoutDefault({ children }: { children: React.ReactNode }) {
     return <div onClick={() => item.path?.startsWith('/') && router.push(item.path)}>{dom}</div>
   }
 
-  const { settings } = useLayoutStore()
+  const { settings, setSettings, showSetting, setShowSetting } = useLayoutStore()
 
   return (
     <LayoutProvider>
@@ -51,6 +51,16 @@ export function LayoutDefault({ children }: { children: React.ReactNode }) {
         <GridContent className="h-full [&>.ant-pro-grid-content-children]:h-full">
           {children}
         </GridContent>
+
+        <SettingDrawer
+          settings={settings}
+          onSettingChange={setSettings}
+          collapse={showSetting}
+          onCollapseChange={setShowSetting}
+          enableDarkTheme
+          hideHintAlert
+          hideCopyButton
+        />
       </ProLayout>
     </LayoutProvider>
   )
